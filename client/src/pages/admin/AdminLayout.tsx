@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { ExternalLink, LogOut, QrCode, Settings, UtensilsCrossed } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
@@ -11,6 +12,10 @@ const NAV = [
 
 export function AdminLayout() {
   const { me, logout } = useAuth();
+  useEffect(() => {
+    document.documentElement.lang = "tr";
+    document.title = "EasyDine · Yönetim";
+  }, []);
   if (!me) return null;
   const { restaurant } = me;
   const menuPath = `/menu/${restaurant.slug}`;

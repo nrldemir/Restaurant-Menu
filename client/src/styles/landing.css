@@ -668,6 +668,10 @@
   .hero-sub {
     margin: 0 auto;
   }
+  .hero-ornament {
+    margin-left: auto;
+    margin-right: auto;
+  }
   .hero-cta,
   .hero-checks {
     justify-content: center;
@@ -680,8 +684,11 @@
   .landing-nav {
     padding: max(16px, env(safe-area-inset-top)) 16px 16px;
   }
-  .landing-nav .btn-ghost {
+  .landing-nav .nav-login {
     display: none;
+  }
+  .landing-nav .site-lang {
+    padding: 0 10px;
   }
   .hero {
     padding: 16px 16px 64px;

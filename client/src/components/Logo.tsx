@@ -68,10 +68,12 @@ export const BRAND = "EasyDine";
 export function Logo({
   size = 40,
   tagline = true,
+  taglineText = "dijital menü",
   variant = "default",
 }: {
   size?: number;
   tagline?: boolean;
+  taglineText?: string;
   /** light: koyu zemin üzerinde */
   variant?: "default" | "light";
 }) {
@@ -83,7 +85,7 @@ export function Logo({
           <span className="logo-easy">Easy</span>
           <span className="logo-dine">Dine</span>
         </span>
-        {tagline && <span className="logo-tag">dijital menü</span>}
+        {tagline && <span className="logo-tag">{taglineText}</span>}
       </span>
     </span>
   );

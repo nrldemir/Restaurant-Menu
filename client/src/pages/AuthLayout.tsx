@@ -1,9 +1,13 @@
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Globe, QrCode, Zap } from "lucide-react";
 import { Logo } from "../components/Logo";
 
 export function AuthLayout({ title, subtitle, children }: { title: string; subtitle: ReactNode; children: ReactNode }) {
+  useEffect(() => {
+    document.documentElement.lang = "tr";
+    document.title = `${title} · EasyDine`;
+  }, [title]);
   return (
     <div className="auth">
       <aside className="auth-aside">
