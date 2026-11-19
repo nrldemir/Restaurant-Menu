@@ -149,7 +149,7 @@
   object-fit: cover;
 }
 .table-card-top strong {
-  font-size: 17px;
+  font-size: 21px;
   font-weight: 600;
   text-align: center;
   line-height: 1.2;
@@ -176,7 +176,7 @@
 }
 .table-card-no {
   font-family: var(--font-display);
-  font-size: 20px;
+  font-size: 26px;
   color: var(--m-primary);
 }
 .table-card-no b {

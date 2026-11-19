@@ -91,7 +91,9 @@ code {
 .display {
   font-family: var(--font-display);
   font-optical-sizing: auto;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
+  /* Cormorant'ın eski stil rakamları yerine düz rakamlar (1 ≠ I) */
+  font-variant-numeric: lining-nums;
 }
 
 .muted {
@@ -129,7 +131,7 @@ code {
 }
 .not-found h1 {
   color: var(--text);
-  font-size: 32px;
+  font-size: 40px;
   font-weight: 600;
   margin-top: 8px;
 }

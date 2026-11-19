@@ -13,7 +13,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
-import { Logo, LogoMark } from "../components/Logo";
+import { Logo, LogoMark, Ornament } from "../components/Logo";
 
 const FEATURES = [
   { icon: Timer, title: "Dakikalar içinde hazır", text: "Kategorileri ve ürünleri ekleyin, menünüz anında yayında. Teknik bilgi gerekmez." },
@@ -93,11 +93,12 @@ export function Home() {
     <div className="landing">
       <div className="landing-glow" aria-hidden="true" />
 
+      <div className="royal-top">
       <nav className="landing-nav">
-        <Logo />
+        <Logo variant="light" />
         <div className="landing-nav-actions">
           {me ? (
-            <Link className="btn btn-primary" to="/admin">
+            <Link className="btn btn-gold" to="/admin">
               Panele git <ArrowRight size={16} />
             </Link>
           ) : (
@@ -105,7 +106,7 @@ export function Home() {
               <Link className="btn btn-ghost" to="/login">
                 Giriş yap
               </Link>
-              <Link className="btn btn-primary" to="/register">
+              <Link className="btn btn-gold" to="/register">
                 Ücretsiz başla
               </Link>
             </>
@@ -121,15 +122,16 @@ export function Home() {
           <h1 className="display">
             Menünüz, masada <span className="hero-accent">bir okutma</span> uzağında.
           </h1>
+          <Ornament className="hero-ornament" width={150} />
           <p className="hero-sub">
             Lokma ile restoranınızın menüsünü dakikalar içinde dijitale taşıyın. Fiyatları anında güncelleyin, turistlere
             kendi dillerinde hizmet verin, kâğıt menü masrafından kurtulun.
           </p>
           <div className="hero-cta">
-            <Link className="btn btn-primary btn-lg" to={me ? "/admin" : "/register"}>
+            <Link className="btn btn-gold btn-lg" to={me ? "/admin" : "/register"}>
               {me ? "Panele git" : "Hemen ücretsiz başlayın"} <ArrowRight size={18} />
             </Link>
-            <Link className="btn btn-lg" to="/menu/demo-restoran">
+            <Link className="btn btn-outline-light btn-lg" to="/menu/demo-restoran">
               Demo menüyü gör
             </Link>
           </div>
@@ -169,6 +171,7 @@ export function Home() {
           </div>
         </div>
       </header>
+      </div>
 
       <section className="food-strip" aria-label="Örnek menü görselleri">
         <div className="food-track">

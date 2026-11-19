@@ -17,7 +17,7 @@
   background:
     radial-gradient(500px 300px at 90% 0%, rgb(255 211 122 / 0.35), transparent 60%),
     radial-gradient(400px 400px at 0% 100%, rgb(247 113 63 / 0.45), transparent 60%),
-    linear-gradient(160deg, var(--nar-900) 0%, var(--nar-700) 55%, var(--nar-500) 100%);
+    linear-gradient(160deg, var(--bordo-900) 0%, var(--bordo-700) 55%, var(--bordo-500) 100%);
 }
 .auth-aside::after {
   /* ince nokta deseni */
@@ -44,13 +44,13 @@
   text-decoration: none;
 }
 .auth-aside-body h2 {
-  font-size: clamp(32px, 3.4vw, 46px);
+  font-size: clamp(40px, 4vw, 58px);
   font-weight: 600;
   line-height: 1.08;
   max-width: 420px;
 }
 .auth-aside-body em {
-  color: var(--safran-300);
+  color: var(--altin-300);
 }
 .auth-aside-body ul {
   list-style: none;
@@ -110,7 +110,7 @@
   animation: pop-in 0.35s var(--ease);
 }
 .auth-form-wrap h1 {
-  font-size: 34px;
+  font-size: 42px;
   font-weight: 600;
 }
 .auth-subtitle {
@@ -199,7 +199,7 @@
   background: var(--danger);
 }
 .strength-2 .on {
-  background: var(--safran-400);
+  background: var(--altin-400);
 }
 .strength-3 .on,
 .strength-4 .on {

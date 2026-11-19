@@ -12,6 +12,20 @@ export interface MenuTheme {
 }
 
 export const THEMES: Record<string, MenuTheme> = {
+  bordo: {
+    name: "Bordo & Altın",
+    primary: "#7A1F33",
+    primaryDark: "#E2C072",
+    accent: "#D4AF5A",
+    hero: "linear-gradient(160deg, #1E050C 0%, #4F1020 45%, #7E2337 100%)",
+  },
+  lacivert: {
+    name: "Lacivert & Altın",
+    primary: "#1D2F57",
+    primaryDark: "#E2C072",
+    accent: "#D4AF5A",
+    hero: "linear-gradient(160deg, #050A18 0%, #101E40 45%, #26396B 100%)",
+  },
   nar: {
     name: "Nar",
     primary: "#C2361A",
@@ -51,13 +65,13 @@ export const THEMES: Record<string, MenuTheme> = {
     name: "Antrasit",
     primary: "#2F2924",
     primaryDark: "#E2C48A",
-    accent: "#B8913F",
+    accent: "#D4AF5A",
     hero: "linear-gradient(135deg, #0D0B09 0%, #2B2520 55%, #5C4F43 100%)",
   },
 };
 
 export function getTheme(id: string | undefined) {
-  return THEMES[id ?? ""] ?? THEMES.nar;
+  return THEMES[id ?? ""] ?? THEMES.bordo;
 }
 
 /** Menü sayfasına uygulanan CSS değişkenleri. */

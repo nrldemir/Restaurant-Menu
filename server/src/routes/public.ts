@@ -33,6 +33,8 @@ publicRouter.get("/restaurants/:slug/menu", async (req, res) => {
 });
 
 const THEME_COLORS: Record<string, string> = {
+  bordo: "#4F1020",
+  lacivert: "#101E40",
   nar: "#C2361A",
   safran: "#A85F00",
   zeytin: "#4A7536",
@@ -64,7 +66,7 @@ publicRouter.get("/restaurants/:slug/manifest.webmanifest", async (req, res) => 
       scope: `/menu/${r.slug}`,
       display: "standalone",
       background_color: "#fbf8f4",
-      theme_color: THEME_COLORS[r.theme] ?? THEME_COLORS.nar,
+      theme_color: THEME_COLORS[r.theme] ?? THEME_COLORS.bordo,
       icons,
     }),
   );

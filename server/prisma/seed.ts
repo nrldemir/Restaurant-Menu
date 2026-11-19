@@ -303,7 +303,7 @@ async function main() {
       name: "Lokma Mutfak",
       description: "Odun ateşinde geleneksel Anadolu lezzetleri",
       coverUrl: copyImage("cover"),
-      theme: "nar",
+      theme: "bordo",
       currency: "TRY",
       languages: "tr,en,de",
       defaultLanguage: "tr",

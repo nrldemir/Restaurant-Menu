@@ -6,7 +6,7 @@ import { api, ApiError } from "../lib/api";
 import { formatPrice, LANGUAGES, pick, uiText } from "../lib/i18n";
 import { getTheme, themeVars } from "../lib/themes";
 import type { Product, PublicMenu as Menu } from "../lib/types";
-import { LogoMark } from "../components/Logo";
+import { LogoMark, Ornament } from "../components/Logo";
 
 function langKey(slug: string) {
   return `rm_lang_${slug}`;
@@ -53,14 +53,13 @@ function Sheet({ onClose, children, label }: { onClose(): void; children: ReactN
 
 function MenuSkeleton() {
   return (
-    <div className="menu-page" style={themeVars("nar")}>
-      <div className="menu-hero skeleton-hero" />
-      <div className="menu-shell">
-        <div className="menu-identity">
-          <div className="skeleton" style={{ width: 84, height: 84, borderRadius: 24, margin: "-62px auto 12px" }} />
-          <div className="skeleton" style={{ width: "55%", height: 26, margin: "0 auto 10px" }} />
-          <div className="skeleton" style={{ width: "75%", height: 14, margin: "0 auto" }} />
+    <div className="menu-page" style={themeVars("bordo")}>
+      <div className="menu-hero skeleton-hero">
+        <div className="menu-hero-content">
+          <div className="menu-crest" />
         </div>
+      </div>
+      <div className="menu-shell" style={{ paddingTop: 16 }}>
         {[0, 1, 2, 3].map((i) => (
           <div key={i} className="skeleton" style={{ height: 104, borderRadius: 18, marginTop: 12 }} />
         ))}
@@ -198,7 +197,7 @@ export function PublicMenu() {
   if (status === "loading") return <MenuSkeleton />;
   if (status !== "ok" || !menu) {
     return (
-      <div className="menu-page menu-missing" style={themeVars("nar")}>
+      <div className="menu-page menu-missing" style={themeVars("bordo")}>
         <div className="menu-missing-icon">
           <UtensilsCrossed size={30} />
         </div>
@@ -214,10 +213,8 @@ export function PublicMenu() {
 
   return (
     <div className="menu-page" dir={rtl ? "rtl" : "ltr"} style={themeVars(restaurant.theme)}>
-      <header
-        className={`menu-hero${restaurant.coverUrl ? " has-cover" : ""}`}
-        style={restaurant.coverUrl ? { backgroundImage: `url(${restaurant.coverUrl})` } : undefined}
-      >
+      <header className={`menu-hero${restaurant.coverUrl ? " has-cover" : ""}`}>
+        {restaurant.coverUrl && <img className="menu-hero-img" src={restaurant.coverUrl} alt="" />}
         <div className="menu-hero-bar">
           {table ? (
             <span className="glass-pill">
@@ -234,21 +231,21 @@ export function PublicMenu() {
             </button>
           )}
         </div>
-      </header>
-
-      <div className="menu-shell">
-        <section className="menu-identity">
-          <div className="menu-logo">
+        <div className="menu-hero-content">
+          <div className="menu-crest">
             {restaurant.logoUrl ? (
               <img src={restaurant.logoUrl} alt="" />
             ) : (
-              <span className="menu-logo-fallback display">{restaurant.name.charAt(0)}</span>
+              <span className="display">{restaurant.name.charAt(0)}</span>
             )}
           </div>
-          <h1 className="display">{restaurant.name}</h1>
-          {restaurant.description && <p>{restaurant.description}</p>}
-        </section>
+          <h1 className="menu-title display">{restaurant.name}</h1>
+          <Ornament className="menu-ornament" width={140} />
+          {restaurant.description && <p className="menu-tagline display">{restaurant.description}</p>}
+        </div>
+      </header>
 
+      <div className="menu-shell">
         <div ref={sentinelRef} className="sticky-sentinel" />
         <div className={`menu-sticky${stuck ? " stuck" : ""}`}>
           {totalProducts > 6 && (
@@ -374,7 +371,7 @@ export function PublicMenu() {
               {restaurant.languages.map((l) => (
                 <li key={l}>
                   <button className={l === lang ? "active" : ""} onClick={() => changeLang(l)}>
-                    <span className="lang-code">{l}</span>
+                    <span className="lang-code">{l.toUpperCase()}</span>
                     <span>{LANGUAGES[l]?.name ?? l}</span>
                     {l === lang && <Check size={18} />}
                   </button>

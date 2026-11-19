@@ -2,6 +2,7 @@ import { useMemo, useState, type FormEvent } from "react";
 import { Check, Globe, ImageIcon, LoaderCircle, Palette, Store, TriangleAlert } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
 import { ImageInput } from "../../components/ImageInput";
+import { Ornament } from "../../components/Logo";
 import { useToast } from "../../components/Toast";
 import { Card, PageHeader } from "../../components/ui";
 import { api, errorMessage } from "../../lib/api";
@@ -33,27 +34,26 @@ function toForm(r: Restaurant): Form {
 function MenuPreview({ form }: { form: Form }) {
   return (
     <div className="preview-phone menu-page" style={themeVars(form.theme)}>
-      <div
-        className={`preview-hero menu-hero${form.coverUrl ? " has-cover" : ""}`}
-        style={form.coverUrl ? { backgroundImage: `url(${form.coverUrl})` } : undefined}
-      >
+      <div className={`preview-hero menu-hero${form.coverUrl ? " has-cover" : ""}`}>
+        {form.coverUrl && <img className="menu-hero-img" src={form.coverUrl} alt="" />}
         <div className="menu-hero-bar">
           <span className="glass-pill">Masa 4</span>
           <span className="glass-pill">
-            <Globe size={12} /> {form.defaultLanguage.toUpperCase()}
+            <Globe size={11} /> {form.defaultLanguage.toUpperCase()}
           </span>
         </div>
-      </div>
-      <div className="preview-identity menu-identity">
-        <div className="menu-logo">
-          {form.logoUrl ? (
-            <img src={form.logoUrl} alt="" />
-          ) : (
-            <span className="menu-logo-fallback display">{form.name.charAt(0) || "?"}</span>
-          )}
+        <div className="menu-hero-content">
+          <div className="menu-crest">
+            {form.logoUrl ? (
+              <img src={form.logoUrl} alt="" />
+            ) : (
+              <span className="display">{form.name.charAt(0) || "?"}</span>
+            )}
+          </div>
+          <h1 className="menu-title display">{form.name || "Restoran adı"}</h1>
+          <Ornament className="menu-ornament" width={100} />
+          {form.description && <p className="menu-tagline display">{form.description}</p>}
         </div>
-        <h1 className="display">{form.name || "Restoran adı"}</h1>
-        {form.description && <p>{form.description}</p>}
       </div>
       <div className="preview-chips cat-nav">
         <a className="active">Ana Yemekler</a>
@@ -226,7 +226,7 @@ export function Settings() {
                       onClick={() => toggleLanguage(code)}
                       aria-pressed={on}
                     >
-                      <span className="lang-code">{code}</span>
+                      <span className="lang-code">{code.toUpperCase()}</span>
                       {info.name}
                       {on && <Check size={14} strokeWidth={3} />}
                     </button>
