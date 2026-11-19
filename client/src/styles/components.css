@@ -12,33 +12,32 @@
   line-height: 1;
 }
 .logo-word {
-  font-family: var(--font-display);
-  font-weight: 650;
-  font-size: 25px;
-  letter-spacing: 0.24em;
-  margin-right: -0.24em;
-  color: var(--bordo-800);
+  font-family: var(--font-sans);
+  font-size: 23px;
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+}
+.logo-easy {
+  font-weight: 500;
+  color: var(--tas-800);
+}
+.logo-dine {
+  font-weight: 800;
+  color: var(--bordo-600);
 }
 .logo-tag {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 9px;
+  font-size: 9.5px;
   font-weight: 700;
-  letter-spacing: 0.26em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--altin-600);
   margin-top: 4px;
   white-space: nowrap;
 }
-.logo-tag i {
-  flex: 1;
-  min-width: 8px;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.6;
+.logo-light .logo-easy {
+  color: #fbf5e6;
 }
-.logo-light .logo-word {
+.logo-light .logo-dine {
   background: var(--gold-gradient);
   -webkit-background-clip: text;
   background-clip: text;
@@ -48,7 +47,10 @@
   color: var(--altin-300);
 }
 @media (prefers-color-scheme: dark) {
-  .logo-default .logo-word {
+  .logo-default .logo-easy {
+    color: #f6f0e9;
+  }
+  .logo-default .logo-dine {
     color: var(--altin-300);
   }
   .logo-default .logo-tag {

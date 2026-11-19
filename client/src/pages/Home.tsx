@@ -124,7 +124,7 @@ export function Home() {
           </h1>
           <Ornament className="hero-ornament" width={150} />
           <p className="hero-sub">
-            Lokma ile restoranınızın menüsünü dakikalar içinde dijitale taşıyın. Fiyatları anında güncelleyin, turistlere
+            EasyDine ile restoranınızın menüsünü dakikalar içinde dijitale taşıyın. Fiyatları anında güncelleyin, turistlere
             kendi dillerinde hizmet verin, kâğıt menü masrafından kurtulun.
           </p>
           <div className="hero-cta">
@@ -231,7 +231,7 @@ export function Home() {
       <footer className="landing-footer">
         <Logo size={28} tagline={false} />
         <span>
-          © {new Date().getFullYear()} Lokma · Restoranlar için dijital menü ·{" "}
+          © {new Date().getFullYear()} EasyDine · Restoranlar için dijital menü ·{" "}
           <Link to="/kaynaklar">Görsel kaynakları</Link>
         </span>
       </footer>

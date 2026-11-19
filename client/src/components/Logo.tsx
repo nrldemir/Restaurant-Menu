@@ -1,48 +1,52 @@
 import { useId } from "react";
 
 /**
- * Lokma amblemi: bordo zemin, çift altın halka, taçlı servis kubbesi (cloche).
- * Aynı çizim public/favicon.svg ve public/icons/*.svg içinde de kullanılır.
+ * EasyDine amblemi: bordo zemin üzerinde üstten görülen bir tabak; tabağın şekli "e" harfini
+ * oluşturur, iki yanında altın çatal ve bıçak. Aynı çizim public/favicon.svg ve
+ * public/icons/icon-maskable.svg içinde de kullanılır.
  */
 export function LogoMark({ size = 40, className }: { size?: number; className?: string }) {
   const id = useId().replace(/:/g, "");
   const bg = `bg${id}`;
   const gold = `gold${id}`;
-  const shine = `shine${id}`;
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" className={className} aria-hidden="true">
       <defs>
-        <radialGradient id={bg} cx="0.35" cy="0.3" r="0.85">
-          <stop offset="0" stopColor="#8E2A40" />
-          <stop offset="0.55" stopColor="#5E1426" />
-          <stop offset="1" stopColor="#2E0812" />
-        </radialGradient>
-        <linearGradient id={gold} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#F8E7AE" />
-          <stop offset="0.45" stopColor="#D8B562" />
-          <stop offset="1" stopColor="#A57E2E" />
+        <linearGradient id={bg} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#A33B52" />
+          <stop offset="0.55" stopColor="#7F2236" />
+          <stop offset="1" stopColor="#4F1020" />
         </linearGradient>
-        <linearGradient id={shine} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#fff" stopOpacity="0.55" />
-          <stop offset="1" stopColor="#fff" stopOpacity="0" />
+        <linearGradient id={gold} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#F6E3A1" />
+          <stop offset="1" stopColor="#C9A04A" />
         </linearGradient>
       </defs>
-      <circle cx="24" cy="24" r="24" fill={`url(#${bg})`} />
-      <circle cx="24" cy="24" r="21.6" fill="none" stroke={`url(#${gold})`} strokeWidth="1.1" />
-      <circle cx="24" cy="24" r="19.9" fill="none" stroke={`url(#${gold})`} strokeWidth="0.45" opacity="0.75" />
-      {/* taç */}
+      <rect width="48" height="48" rx="13" fill={`url(#${bg})`} />
+      <circle cx="24" cy="24" r="14.2" fill="none" stroke="#fff" strokeOpacity="0.22" strokeWidth="1.2" />
       <path
-        d="M19.6 14.2 L20.4 10.3 L22.2 12.3 L24 9.4 L25.8 12.3 L27.6 10.3 L28.4 14.2 Z"
-        fill={`url(#${gold})`}
+        d="M15.6 24.4H32.4A8.4 8.4 0 1 0 29.8 30.5"
+        fill="none"
+        stroke="#fff"
+        strokeWidth="3.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
-      <rect x="19.6" y="14.5" width="8.8" height="1.1" rx="0.5" fill={`url(#${gold})`} />
-      {/* kubbe */}
-      <circle cx="24" cy="18" r="1.5" fill={`url(#${gold})`} />
-      <path d="M13 30.2a11 11 0 0 1 22 0z" fill={`url(#${gold})`} />
-      <path d="M16.3 28.6a8.2 8.2 0 0 1 4.6-6.4" fill="none" stroke={`url(#${shine})`} strokeWidth="1" strokeLinecap="round" />
-      <rect x="10.8" y="31.2" width="26.4" height="2.2" rx="1.1" fill={`url(#${gold})`} />
-      {/* yan süsler */}
-      <path d="M4.6 24l1.1-1.1 1.1 1.1-1.1 1.1z M41.2 24l1.1-1.1 1.1 1.1-1.1 1.1z" fill="#D8B562" />
+      <path
+        d="M6.6 11.5v5.4a1.7 1.7 0 0 0 1.7 1.7h0a1.7 1.7 0 0 0 1.7-1.7v-5.4M8.3 11.5v5.6M8.3 18.6v17.4"
+        fill="none"
+        stroke={`url(#${gold})`}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M39.7 36V11.6c2.2 1.4 2.7 5.6 2.4 9.2-.1 1.2-.9 2-2.4 2.1"
+        fill="none"
+        stroke={`url(#${gold})`}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -59,6 +63,8 @@ export function Ornament({ className = "", width = 120 }: { className?: string; 
   );
 }
 
+export const BRAND = "EasyDine";
+
 export function Logo({
   size = 40,
   tagline = true,
@@ -66,21 +72,18 @@ export function Logo({
 }: {
   size?: number;
   tagline?: boolean;
-  /** light: koyu zemin üzerinde (altın yazı) */
+  /** light: koyu zemin üzerinde */
   variant?: "default" | "light";
 }) {
   return (
-    <span className={`logo logo-${variant}`}>
+    <span className={`logo logo-${variant}`} aria-label={BRAND}>
       <LogoMark size={size} />
-      <span className="logo-text">
-        <span className="logo-word">LOKMA</span>
-        {tagline && (
-          <span className="logo-tag">
-            <i />
-            dijital menü
-            <i />
-          </span>
-        )}
+      <span className="logo-text" aria-hidden="true">
+        <span className="logo-word">
+          <span className="logo-easy">Easy</span>
+          <span className="logo-dine">Dine</span>
+        </span>
+        {tagline && <span className="logo-tag">dijital menü</span>}
       </span>
     </span>
   );

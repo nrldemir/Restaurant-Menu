@@ -1,6 +1,6 @@
 {
-  "name": "Lokma · Dijital Menü",
-  "short_name": "Lokma",
+  "name": "EasyDine · Dijital Menü",
+  "short_name": "EasyDine",
   "description": "Restoranınızın dijital menüsünü yönetin.",
   "lang": "tr",
   "start_url": "/admin",

@@ -8,7 +8,7 @@ export function AuthLayout({ title, subtitle, children }: { title: string; subti
     <div className="auth">
       <aside className="auth-aside">
         <Link to="/" className="auth-aside-logo">
-          <Logo />
+          <Logo variant="light" />
         </Link>
         <div className="auth-aside-body">
           <h2 className="display">

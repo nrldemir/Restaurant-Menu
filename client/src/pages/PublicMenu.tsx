@@ -489,7 +489,7 @@ export function PublicMenu() {
         )}
         <div className="m-footer-links">
           <a href="/" target="_blank" rel="noreferrer">
-            <LogoMark size={18} /> Lokma ile hazırlandı
+            <LogoMark size={18} /> EasyDine ile hazırlandı
           </a>
           {slug === "demo-restoran" && (
             <a href="/kaynaklar" target="_blank" rel="noreferrer">

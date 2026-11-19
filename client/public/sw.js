@@ -1,6 +1,6 @@
-// Lokma service worker: önce ağ, bağlantı yoksa önbellek.
+// EasyDine service worker: önce ağ, bağlantı yoksa önbellek.
 // Menü bir kez açıldıysa internet kesilse bile görüntülenebilir.
-const CACHE = "lokma-v1";
+const CACHE = "easydine-v1";
 const SHELL = "/__shell";
 
 self.addEventListener("install", () => self.skipWaiting());

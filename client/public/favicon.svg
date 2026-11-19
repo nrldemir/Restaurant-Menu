@@ -1,23 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
   <defs>
-    <radialGradient id="bg" cx="0.35" cy="0.3" r="0.85">
-      <stop offset="0" stop-color="#8E2A40"/>
-      <stop offset="0.55" stop-color="#5E1426"/>
-      <stop offset="1" stop-color="#2E0812"/>
-    </radialGradient>
-    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#F8E7AE"/>
-      <stop offset="0.45" stop-color="#D8B562"/>
-      <stop offset="1" stop-color="#A57E2E"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#A33B52"/>
+      <stop offset="0.55" stop-color="#7F2236"/>
+      <stop offset="1" stop-color="#4F1020"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F6E3A1"/>
+      <stop offset="1" stop-color="#C9A04A"/>
     </linearGradient>
   </defs>
-  <circle cx="24" cy="24" r="24" fill="url(#bg)"/>
-  <circle cx="24" cy="24" r="21.6" fill="none" stroke="url(#gold)" stroke-width="1.1"/>
-  <circle cx="24" cy="24" r="19.9" fill="none" stroke="url(#gold)" stroke-width="0.45" opacity="0.75"/>
-  <path d="M19.6 14.2 L20.4 10.3 L22.2 12.3 L24 9.4 L25.8 12.3 L27.6 10.3 L28.4 14.2 Z" fill="url(#gold)"/>
-  <rect x="19.6" y="14.5" width="8.8" height="1.1" rx="0.5" fill="url(#gold)"/>
-  <circle cx="24" cy="18" r="1.5" fill="url(#gold)"/>
-  <path d="M13 30.2a11 11 0 0 1 22 0z" fill="url(#gold)"/>
-  <rect x="10.8" y="31.2" width="26.4" height="2.2" rx="1.1" fill="url(#gold)"/>
-  <path d="M4.6 24l1.1-1.1 1.1 1.1-1.1 1.1z M41.2 24l1.1-1.1 1.1 1.1-1.1 1.1z" fill="#D8B562"/>
+  <rect width="48" height="48" rx="13" fill="url(#bg)"/>
+  <!-- tabak: dış halka -->
+  <circle cx="24" cy="24" r="14.2" fill="none" stroke="#fff" stroke-opacity="0.22" stroke-width="1.2"/>
+  <!-- "e" harfi = tabak -->
+  <path d="M15.6 24.4H32.4A8.4 8.4 0 1 0 29.8 30.5" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- çatal -->
+  <path d="M6.6 11.5v5.4a1.7 1.7 0 0 0 1.7 1.7h0a1.7 1.7 0 0 0 1.7-1.7v-5.4M8.3 11.5v5.6M8.3 18.6v17.4" fill="none" stroke="url(#gold)" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- bıçak -->
+  <path d="M39.7 36V11.6c2.2 1.4 2.7 5.6 2.4 9.2-.1 1.2-.9 2-2.4 2.1" fill="none" stroke="url(#gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

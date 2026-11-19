@@ -1,4 +1,4 @@
-# Lokma · Dijital Menü
+# EasyDine · Dijital Menü
 
 Restoranlar için çok dilli, QR kodlu dijital menü platformu. Her restoran kendi hesabıyla menüsünü yönetir ve menüsü `/menu/<link-adı>` adresinde yayınlanır.
 
@@ -38,7 +38,7 @@ Renkler, yazı tipleri ve gölgeler [client/src/styles/tokens.css](client/src/st
 
 - **Bordo** (`--bordo-50 … --bordo-950`) ana marka rengi, **Altın** (`--altin-*`, `--gold-gradient`) vurgu ve süslemeler, **Taş** fildişi/sıcak nötr tonlar. Koyu modda ana renk altındır.
 - Başlıklar **Cormorant Garamond**, metinler **Plus Jakarta Sans** (paket olarak gömülü, harici istek yok).
-- Logo: bordo zemin, çift altın halka, taçlı servis kubbesi — [Logo.tsx](client/src/components/Logo.tsx), [favicon.svg](client/public/favicon.svg). Altın süsleme ayıracı için `<Ornament />`.
+- Logo: bordo zemin üzerinde üstten görülen tabak — tabağın şekli "e" harfini oluşturur — ve iki yanında altın çatal-bıçak; yazı "Easy" + kalın "Dine" — [Logo.tsx](client/src/components/Logo.tsx), [favicon.svg](client/public/favicon.svg). Altın süsleme ayıracı için `<Ornament />`.
 - Menü temaları [client/src/lib/themes.ts](client/src/lib/themes.ts) içinde; yeni tema eklerken `server/src/lib/languages.ts` içindeki `THEMES` listesine de ekleyin.
 
 ## Telefondan test (iOS ve Android)
@@ -51,7 +51,7 @@ Renkler, yazı tipleri ve gölgeler [client/src/styles/tokens.css](client/src/st
 
 1. Telefon bilgisayarla **aynı Wi‑Fi** ağında olmalı.
 2. Panelde **QR Kodlar** sayfasındaki bir masa kodunu telefon kamerasıyla okutun veya adresi telefonun tarayıcısına yazın.
-3. **Ana ekrana ekleme:** iPhone'da Safari → Paylaş → *Ana Ekrana Ekle*; Android'de Chrome → ⋮ → *Ana ekrana ekle*. Menü sayfasından eklenirse restoranın adı ve rengiyle, panelden eklenirse "Lokma" olarak açılır.
+3. **Ana ekrana ekleme:** iPhone'da Safari → Paylaş → *Ana Ekrana Ekle*; Android'de Chrome → ⋮ → *Ana ekrana ekle*. Menü sayfasından eklenirse restoranın adı ve rengiyle, panelden eklenirse "EasyDine" olarak açılır.
 
 Notlar: Windows ilk çalıştırmada Node.js için güvenlik duvarı izni sorar; izin vermezseniz telefon bağlanamaz. Android'in tam PWA kurulumu (çevrimdışı çalışma) HTTPS ister; yerel ağda http ile ana ekrana kısayol eklenir. Canlıda `CLIENT_URL`'i gerçek HTTPS alan adınız yapın.
 
