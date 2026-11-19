@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { LANGUAGES } from "../lib/i18n";
+import { useUi } from "../lib/ui-lang";
 import type { TranslationMap } from "../lib/types";
 
 interface Props {
@@ -26,6 +27,7 @@ export function TranslationFields({
   const [active, setActive] = useState(ordered[0]);
   const current = value[active] ?? { name: "", description: "" };
   const isDefault = active === defaultLanguage;
+  const { t } = useUi();
 
   const update = (field: "name" | "description", text: string) =>
     onChange({ ...value, [active]: { ...current, [field]: text } });
@@ -33,7 +35,7 @@ export function TranslationFields({
   return (
     <div className="translations">
       {ordered.length > 1 && (
-        <div className="segmented" role="tablist" aria-label="Dil">
+        <div className="segmented" role="tablist" aria-label={t.translations.tabs}>
           {ordered.map((lang) => {
             const filled = Boolean(value[lang]?.name?.trim());
             return (
@@ -46,7 +48,7 @@ export function TranslationFields({
                 onClick={() => setActive(lang)}
               >
                 {LANGUAGES[lang]?.name ?? lang.toUpperCase()}
-                <span className={`status-dot${filled ? " ok" : ""}`} aria-label={filled ? "Dolu" : "Boş"} />
+                <span className={`status-dot${filled ? " ok" : ""}`} aria-label={filled ? t.translations.filled : t.translations.empty} />
               </button>
             );
           })}
@@ -55,7 +57,8 @@ export function TranslationFields({
       <div dir={LANGUAGES[active]?.rtl ? "rtl" : "ltr"} className="translations-fields">
         <label className="field">
           <span className="field-label">
-            İsim{ordered.length > 1 && <em> · {LANGUAGES[active]?.name ?? active}</em>}
+            {t.translations.name}
+            {ordered.length > 1 && <em> · {LANGUAGES[active]?.name ?? active}</em>}
             {isDefault && <b className="req">*</b>}
           </span>
           <input
@@ -63,13 +66,13 @@ export function TranslationFields({
             onChange={(e) => update("name", e.target.value)}
             required={isDefault}
             maxLength={150}
-            placeholder={isDefault ? namePlaceholder : "Boş bırakılırsa varsayılan dil gösterilir"}
+            placeholder={isDefault ? namePlaceholder : t.translations.fallbackPh}
             autoFocus
           />
         </label>
         {withDescription && (
           <label className="field">
-            <span className="field-label">Açıklama</span>
+            <span className="field-label">{t.translations.description}</span>
             <textarea
               value={current.description ?? ""}
               onChange={(e) => update("description", e.target.value)}

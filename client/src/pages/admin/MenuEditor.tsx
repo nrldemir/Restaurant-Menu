@@ -21,6 +21,7 @@ import { EmptyState, PageHeader, Switch } from "../../components/ui";
 import { api, errorMessage } from "../../lib/api";
 import { formatPrice, pick } from "../../lib/i18n";
 import type { Category, Product } from "../../lib/types";
+import { useUi } from "../../lib/ui-lang";
 import { CategoryForm, ProductForm } from "./forms";
 
 type Editing = { kind: "category"; item?: Category } | { kind: "product"; item?: Product } | null;
@@ -45,6 +46,8 @@ export function MenuEditor() {
   const lang = restaurant.defaultLanguage;
   const toast = useToast();
   const confirm = useConfirm();
+  const ui = useUi().t;
+  const tx = ui.editor;
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -114,7 +117,7 @@ export function MenuEditor() {
           method: "PUT",
           body: { translations: c.translations, isActive, imageUrl: c.imageUrl },
         }),
-      isActive ? `"${name(c)}" menüde gösteriliyor` : `"${name(c)}" menüden gizlendi`,
+      isActive ? tx.toastShown(name(c)) : tx.toastHidden(name(c)),
     );
   }
 
@@ -133,47 +136,35 @@ export function MenuEditor() {
             isAvailable,
           },
         }),
-      isAvailable ? `"${name(p)}" tekrar satışta` : `"${name(p)}" tükendi olarak işaretlendi`,
+      isAvailable ? tx.toastOnSale(name(p)) : tx.toastSoldOut(name(p)),
     );
   }
 
   async function deleteCategory(c: Category) {
     const count = countIn(c.id);
     const ok = await confirm({
-      title: "Kategori silinsin mi?",
-      message: count ? (
-        <>
-          <b>{name(c)}</b> kategorisi ve içindeki <b>{count} ürün</b> kalıcı olarak silinecek.
-        </>
-      ) : (
-        <>
-          <b>{name(c)}</b> kategorisi kalıcı olarak silinecek.
-        </>
-      ),
-      confirmText: "Evet, sil",
+      title: tx.deleteCategoryTitle,
+      message: tx.deleteCategoryMsg(name(c), count),
+      confirmText: ui.common.yesDelete,
       danger: true,
     });
     if (!ok) return;
     setCategories((list) => list.filter((x) => x.id !== c.id));
     setProducts((list) => list.filter((p) => p.categoryId !== c.id));
     if (selectedId === c.id) setSelectedId(categories.find((x) => x.id !== c.id)?.id ?? null);
-    run(() => api(`/admin/categories/${c.id}`, { method: "DELETE" }), "Kategori silindi");
+    run(() => api(`/admin/categories/${c.id}`, { method: "DELETE" }), tx.toastCategoryDeleted);
   }
 
   async function deleteProduct(p: Product) {
     const ok = await confirm({
-      title: "Ürün silinsin mi?",
-      message: (
-        <>
-          <b>{name(p)}</b> menünüzden kalıcı olarak silinecek.
-        </>
-      ),
-      confirmText: "Evet, sil",
+      title: tx.deleteItemTitle,
+      message: tx.deleteItemMsg(name(p)),
+      confirmText: ui.common.yesDelete,
       danger: true,
     });
     if (!ok) return;
     setProducts((list) => list.filter((x) => x.id !== p.id));
-    run(() => api(`/admin/products/${p.id}`, { method: "DELETE" }), "Ürün silindi");
+    run(() => api(`/admin/products/${p.id}`, { method: "DELETE" }), tx.toastItemDeleted);
   }
 
   function onCategorySaved(saved: Category) {
@@ -181,14 +172,14 @@ export function MenuEditor() {
     setCategories((list) => (isNew ? [...list, saved] : list.map((c) => (c.id === saved.id ? saved : c))));
     setSelectedId(saved.id);
     setEditing(null);
-    toast.success(isNew ? "Kategori eklendi" : "Kategori güncellendi");
+    toast.success(isNew ? tx.toastCategoryAdded : tx.toastCategoryUpdated);
   }
 
   function onProductSaved(saved: Product) {
     const isNew = !products.some((p) => p.id === saved.id);
     setProducts((list) => (isNew ? [...list, saved] : list.map((p) => (p.id === saved.id ? saved : p))));
     setEditing(null);
-    toast.success(isNew ? "Ürün eklendi" : "Ürün güncellendi");
+    toast.success(isNew ? tx.toastItemAdded : tx.toastItemUpdated);
   }
 
   if (loading) {
@@ -208,31 +199,31 @@ export function MenuEditor() {
   return (
     <div className="page">
       <PageHeader
-        title="Menü"
-        subtitle="Kategorileri ve ürünleri düzenleyin. Sıralamak için tutup sürükleyin."
+        title={tx.title}
+        subtitle={tx.subtitle}
         actions={
           <button className="btn btn-primary" onClick={() => setEditing({ kind: "category" })}>
-            <Plus size={17} /> Kategori ekle
+            <Plus size={17} /> {tx.addCategory}
           </button>
         }
       />
 
       <div className="stats">
-        <Stat icon={Layers} label="Kategori" value={categories.length} tone="nar" />
-        <Stat icon={UtensilsCrossed} label="Ürün" value={products.length} tone="safran" />
-        <Stat icon={CircleCheck} label="Satışta" value={products.length - soldOut} tone="zeytin" />
-        <Stat icon={CircleSlash} label="Tükendi" value={soldOut} tone="tas" />
+        <Stat icon={Layers} label={tx.statCategories} value={categories.length} tone="nar" />
+        <Stat icon={UtensilsCrossed} label={tx.statItems} value={products.length} tone="safran" />
+        <Stat icon={CircleCheck} label={tx.statAvailable} value={products.length - soldOut} tone="zeytin" />
+        <Stat icon={CircleSlash} label={tx.statSoldOut} value={soldOut} tone="tas" />
       </div>
 
       {categories.length === 0 ? (
         <div className="card">
           <EmptyState
             icon={FolderOpen}
-            title="Menünüzü oluşturmaya başlayın"
-            text={`Önce "Kahvaltı", "Ana Yemekler" veya "İçecekler" gibi bir kategori ekleyin, ardından içine ürünlerinizi ekleyin.`}
+            title={tx.emptyTitle}
+            text={tx.emptyText}
             action={
               <button className="btn btn-primary" onClick={() => setEditing({ kind: "category" })}>
-                <Plus size={17} /> İlk kategoriyi ekle
+                <Plus size={17} /> {tx.addFirstCategory}
               </button>
             }
           />
@@ -243,11 +234,11 @@ export function MenuEditor() {
             <header className="card-header">
               <div className="card-title">
                 <div>
-                  <h2>Kategoriler</h2>
-                  <p>{categories.length} kategori</p>
+                  <h2>{tx.categories}</h2>
+                  <p>{tx.categoryCount(categories.length)}</p>
                 </div>
               </div>
-              <button className="icon-btn" onClick={() => setEditing({ kind: "category" })} aria-label="Kategori ekle">
+              <button className="icon-btn" onClick={() => setEditing({ kind: "category" })} aria-label={tx.addCategory}>
                 <Plus size={18} />
               </button>
             </header>
@@ -266,10 +257,10 @@ export function MenuEditor() {
                   <button className="cat-main" onClick={() => setSelectedId(c.id)}>
                     <span className="cat-name">{name(c)}</span>
                     <span className="cat-meta">
-                      {countIn(c.id)} ürün
+                      {tx.itemCount(countIn(c.id))}
                       {!c.isActive && (
                         <span className="badge badge-warn">
-                          <EyeOff size={11} /> Gizli
+                          <EyeOff size={11} /> {ui.common.hidden}
                         </span>
                       )}
                     </span>
@@ -278,20 +269,20 @@ export function MenuEditor() {
                     <button
                       className="icon-btn"
                       onClick={() => toggleCategory(c)}
-                      aria-label={c.isActive ? "Menüden gizle" : "Menüde göster"}
-                      title={c.isActive ? "Menüden gizle" : "Menüde göster"}
+                      aria-label={c.isActive ? tx.hideFromMenu : tx.showOnMenu}
+                      title={c.isActive ? tx.hideFromMenu : tx.showOnMenu}
                     >
                       {c.isActive ? <Eye size={16} /> : <EyeOff size={16} />}
                     </button>
                     <button
                       className="icon-btn"
                       onClick={() => setEditing({ kind: "category", item: c })}
-                      aria-label="Düzenle"
-                      title="Düzenle"
+                      aria-label={ui.common.edit}
+                      title={ui.common.edit}
                     >
                       <Pencil size={16} />
                     </button>
-                    <button className="icon-btn danger" onClick={() => deleteCategory(c)} aria-label="Sil" title="Sil">
+                    <button className="icon-btn danger" onClick={() => deleteCategory(c)} aria-label={ui.common.delete} title={ui.common.delete}>
                       <Trash2 size={16} />
                     </button>
                   </div>
@@ -304,16 +295,16 @@ export function MenuEditor() {
             <header className="card-header">
               <div className="card-title">
                 <div>
-                  <h2 className="display products-title">{selected ? name(selected) : "Ürünler"}</h2>
+                  <h2 className="display products-title">{selected ? name(selected) : tx.items}</h2>
                   <p>
-                    {visibleProducts.length} ürün
-                    {selected && !selected.isActive && " · bu kategori menüde gizli"}
+                    {tx.itemCount(visibleProducts.length)}
+                    {selected && !selected.isActive && tx.categoryHidden}
                   </p>
                 </div>
               </div>
               {selected && (
                 <button className="btn btn-primary btn-sm" onClick={() => setEditing({ kind: "product" })}>
-                  <Plus size={16} /> Ürün ekle
+                  <Plus size={16} /> {tx.addItem}
                 </button>
               )}
             </header>
@@ -321,11 +312,11 @@ export function MenuEditor() {
             {visibleProducts.length === 0 ? (
               <EmptyState
                 icon={Soup}
-                title="Bu kategori henüz boş"
-                text="İlk ürününüzü ekleyin: adını, fiyatını ve iştah açan bir fotoğrafını girin."
+                title={tx.emptyCategoryTitle}
+                text={tx.emptyCategoryText}
                 action={
                   <button className="btn btn-soft" onClick={() => setEditing({ kind: "product" })}>
-                    <Plus size={16} /> Ürün ekle
+                    <Plus size={16} /> {tx.addItem}
                   </button>
                 }
               />
@@ -348,19 +339,19 @@ export function MenuEditor() {
                             <UtensilsCrossed size={26} strokeWidth={1.5} />
                           </span>
                         )}
-                        {!p.isAvailable && <span className="ptile-sold">Tükendi</span>}
+                        {!p.isAvailable && <span className="ptile-sold">{ui.common.soldOut}</span>}
                       </div>
                       <div className="ptile-handle">
                         <DragHandle handle={handle} />
                       </div>
                       <div className="ptile-body" onClick={() => setEditing({ kind: "product", item: p })}>
                         <h3>{t.name}</h3>
-                        {t.description ? <p>{t.description}</p> : <p className="placeholder">Açıklama yok</p>}
+                        {t.description ? <p>{t.description}</p> : <p className="placeholder">{tx.noDescription}</p>}
                         <div className="ptile-meta">
                           <span className="ptile-price">{formatPrice(p.price, restaurant.currency, lang)}</span>
                           {missing.length > 0 && (
-                            <span className="badge badge-warn" title={`Eksik çeviri: ${missing.join(", ").toUpperCase()}`}>
-                              <Languages size={11} /> {missing.length} eksik
+                            <span className="badge badge-warn" title={tx.missingTitle(missing.join(", ").toUpperCase())}>
+                              <Languages size={11} /> {tx.missingCount(missing.length)}
                             </span>
                           )}
                         </div>
@@ -370,21 +361,21 @@ export function MenuEditor() {
                           <Switch
                             checked={p.isAvailable}
                             onChange={() => toggleProduct(p)}
-                            label={p.isAvailable ? "Tükendi olarak işaretle" : "Satışa aç"}
+                            label={p.isAvailable ? tx.markSoldOut : tx.putOnSale}
                             size="sm"
                           />
-                          <span>{p.isAvailable ? "Satışta" : "Tükendi"}</span>
+                          <span>{p.isAvailable ? ui.common.available : ui.common.soldOut}</span>
                         </label>
                         <div>
                           <button
                             className="icon-btn"
                             onClick={() => setEditing({ kind: "product", item: p })}
-                            aria-label="Düzenle"
-                            title="Düzenle"
+                            aria-label={ui.common.edit}
+                            title={ui.common.edit}
                           >
                             <Pencil size={16} />
                           </button>
-                          <button className="icon-btn danger" onClick={() => deleteProduct(p)} aria-label="Sil" title="Sil">
+                          <button className="icon-btn danger" onClick={() => deleteProduct(p)} aria-label={ui.common.delete} title={ui.common.delete}>
                             <Trash2 size={16} />
                           </button>
                         </div>

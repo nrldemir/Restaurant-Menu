@@ -5,6 +5,8 @@ import { useToast } from "../../components/Toast";
 import { Card, PageHeader } from "../../components/ui";
 import { themeVars } from "../../lib/themes";
 import type { Restaurant } from "../../lib/types";
+import { uiText } from "../../lib/i18n";
+import { useUi } from "../../lib/ui-lang";
 
 const MAX_TABLES = 100;
 
@@ -19,6 +21,9 @@ function qrSrc(slug: string, opts: { table?: string; format?: "png" | "svg"; dow
 
 /** Masaya konacak, yazdırılabilir QR kartı. */
 function TableCard({ restaurant, table }: { restaurant: Restaurant; table?: string }) {
+  const { t } = useUi();
+  // Kart müşteriler için yazdırılır: masa etiketi restoranın varsayılan menü dilinde
+  const tableWord = uiText(restaurant.defaultLanguage).table;
   return (
     <figure className="table-card" style={themeVars(restaurant.theme)}>
       <div className="table-card-top">
@@ -32,25 +37,25 @@ function TableCard({ restaurant, table }: { restaurant: Restaurant; table?: stri
         <strong className="display">{restaurant.name}</strong>
       </div>
       <div className="table-card-qr">
-        <img src={qrSrc(restaurant.slug, { table, format: "svg" })} alt={`${table ? `Masa ${table}` : "Menü"} QR kodu`} loading="lazy" />
+        <img src={qrSrc(restaurant.slug, { table, format: "svg" })} alt={t.qr.qrAlt(table ? `${tableWord} ${table}` : t.qr.menu)} loading="lazy" />
       </div>
       <figcaption>
         {table ? (
           <span className="table-card-no">
-            Masa <b>{table}</b>
+            {tableWord} <b>{table}</b>
           </span>
         ) : (
-          <span className="table-card-no">Dijital Menü</span>
+          <span className="table-card-no">{t.qr.generalCaption}</span>
         )}
         <span className="table-card-hint">
           <Smartphone size={13} /> Menü için okutun · Scan for menu
         </span>
       </figcaption>
       <div className="table-card-actions no-print">
-        <a className="btn btn-sm" href={qrSrc(restaurant.slug, { table, download: true })} title="PNG indir">
+        <a className="btn btn-sm" href={qrSrc(restaurant.slug, { table, download: true })} title={t.qr.downloadPng}>
           <Download size={14} /> PNG
         </a>
-        <a className="btn btn-sm" href={qrSrc(restaurant.slug, { table, format: "svg", download: true })} title="SVG indir">
+        <a className="btn btn-sm" href={qrSrc(restaurant.slug, { table, format: "svg", download: true })} title={t.qr.downloadSvg}>
           <Download size={14} /> SVG
         </a>
       </div>
@@ -61,6 +66,8 @@ function TableCard({ restaurant, table }: { restaurant: Restaurant; table?: stri
 export function QrCodes() {
   const { me } = useAuth();
   const toast = useToast();
+  const { t } = useUi();
+  const tq = t.qr;
   const restaurant = me!.restaurant;
   const [count, setCount] = useState(8);
   const [printMode, setPrintMode] = useState<"tables" | "general">("tables");
@@ -70,9 +77,9 @@ export function QrCodes() {
   async function copy() {
     try {
       await navigator.clipboard.writeText(restaurant.menuUrl);
-      toast.success("Link kopyalandı");
+      toast.success(tq.copied);
     } catch {
-      toast.error("Kopyalanamadı, linki elle seçip kopyalayın");
+      toast.error(tq.copyFailed);
     }
   }
 
@@ -85,54 +92,51 @@ export function QrCodes() {
   return (
     <div className={`page qr-page print-${printMode}`}>
       <PageHeader
-        title="QR Kodlar"
-        subtitle="Masalarınıza koyacağınız QR kartlarını hazırlayın ve yazdırın."
+        title={tq.title}
+        subtitle={tq.subtitle}
         actions={
           <button className="btn btn-primary" onClick={() => print("tables")}>
-            <Printer size={17} /> Masa kartlarını yazdır
+            <Printer size={17} /> {tq.printTables}
           </button>
         }
       />
 
-      <Card title="Menü linkiniz" description="Sosyal medyada veya WhatsApp'ta paylaşabilirsiniz." icon={Link2} className="no-print">
+      <Card title={tq.linkTitle} description={tq.linkDesc} icon={Link2} className="no-print">
         <div className="copy-row">
           <div className="copy-field">
             <Link2 size={16} />
-            <input readOnly value={restaurant.menuUrl} onFocus={(e) => e.target.select()} aria-label="Menü linki" />
+            <input readOnly value={restaurant.menuUrl} onFocus={(e) => e.target.select()} aria-label={tq.linkLabel} />
           </div>
           <button className="btn" onClick={copy}>
-            <Copy size={16} /> Kopyala
+            <Copy size={16} /> {tq.copy}
           </button>
           <a className="btn" href={`/menu/${restaurant.slug}`} target="_blank" rel="noreferrer">
-            <ExternalLink size={16} /> Aç
+            <ExternalLink size={16} /> {tq.open}
           </a>
         </div>
         {restaurant.menuUrl.includes("localhost") && (
           <div className="alert alert-warn" style={{ marginTop: 14 }}>
             <TriangleAlert size={17} />
-            <span>
-              Link şu an <b>localhost</b> gösteriyor; telefonlar bu adrese ulaşamaz. Telefondan test ederken veya canlıya
-              alırken <code>server/.env</code> içindeki <code>CLIENT_URL</code> değerini güncelleyin.
-            </span>
+            <span>{tq.localhostWarn()}</span>
           </div>
         )}
       </Card>
 
       <div className="qr-layout">
-        <Card title="Genel QR" description="Kapı, vitrin veya kasa için." icon={QrCode} className="qr-general">
+        <Card title={tq.generalTitle} description={tq.generalDesc} icon={QrCode} className="qr-general">
           <TableCard restaurant={restaurant} />
           <button className="btn btn-block no-print" onClick={() => print("general")} style={{ marginTop: 14 }}>
-            <Printer size={16} /> Yazdır
+            <Printer size={16} /> {tq.print}
           </button>
         </Card>
 
         <Card
-          title="Masa kartları"
-          description="Her masaya özel QR: okutulunca menüde masa numarası görünür."
+          title={tq.tablesTitle}
+          description={tq.tablesDesc}
           className="qr-tables"
           actions={
-            <div className="stepper no-print" role="group" aria-label="Masa sayısı">
-              <button onClick={() => setCount((c) => Math.max(1, c - 1))} aria-label="Azalt" disabled={safeCount <= 1}>
+            <div className="stepper no-print" role="group" aria-label={tq.tableCount}>
+              <button onClick={() => setCount((c) => Math.max(1, c - 1))} aria-label={tq.decrease} disabled={safeCount <= 1}>
                 <Minus size={16} />
               </button>
               <input
@@ -141,16 +145,16 @@ export function QrCodes() {
                 max={MAX_TABLES}
                 value={count}
                 onChange={(e) => setCount(Number(e.target.value) || 1)}
-                aria-label="Masa sayısı"
+                aria-label={tq.tableCount}
               />
               <button
                 onClick={() => setCount((c) => Math.min(MAX_TABLES, c + 1))}
-                aria-label="Artır"
+                aria-label={tq.increase}
                 disabled={safeCount >= MAX_TABLES}
               >
                 <Plus size={16} />
               </button>
-              <span>masa</span>
+              <span>{tq.tablesUnit}</span>
             </div>
           }
         >

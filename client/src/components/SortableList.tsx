@@ -19,6 +19,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
+import { useUi } from "../lib/ui-lang";
 
 export type DragHandleProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   ref: (el: HTMLElement | null) => void;
@@ -96,7 +97,9 @@ function SortableItem({
   );
 }
 
-export function DragHandle({ handle, label = "Sürükleyerek sırala" }: { handle: DragHandleProps; label?: string }) {
+export function DragHandle({ handle, label }: { handle: DragHandleProps; label?: string }) {
+  const { t } = useUi();
+  label ??= t.common.dragToSort;
   return (
     <button type="button" className="drag-handle" aria-label={label} title={label} {...handle}>
       <GripVertical size={16} />

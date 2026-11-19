@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { CircleAlert, CircleCheck, Info, X } from "lucide-react";
+import { useUi } from "../lib/ui-lang";
 
 type ToastType = "success" | "error" | "info";
 interface ToastItem {
@@ -22,6 +23,7 @@ const ICONS = { success: CircleCheck, error: CircleAlert, info: Info };
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const ui = useUi().t;
 
   const dismiss = useCallback((id: number) => setToasts((t) => t.filter((x) => x.id !== id)), []);
 
@@ -54,7 +56,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               <div key={t.id} className={`toast toast-${t.type}`}>
                 <Icon size={18} />
                 <span>{t.text}</span>
-                <button onClick={() => dismiss(t.id)} aria-label="Kapat">
+                <button onClick={() => dismiss(t.id)} aria-label={ui.common.close}>
                   <X size={14} />
                 </button>
               </div>

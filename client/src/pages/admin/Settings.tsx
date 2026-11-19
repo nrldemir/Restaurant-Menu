@@ -9,6 +9,7 @@ import { CURRENCIES, LANGUAGES } from "../../lib/i18n";
 import { sanitizeSlugInput } from "../../lib/slug";
 import { THEMES, themeVars } from "../../lib/themes";
 import type { Restaurant } from "../../lib/types";
+import { useUi } from "../../lib/ui-lang";
 
 type Form = Pick<Restaurant, "name" | "slug" | "logoUrl" | "theme" | "currency" | "languages" | "defaultLanguage"> & {
   description: string;
@@ -31,10 +32,7 @@ function toForm(r: Restaurant): Form {
   };
 }
 
-const PREVIEW_CATS = [
-  { name: "Kahvaltı", img: "/landing/serpme.jpg" },
-  { name: "Izgaralar", img: "/landing/adana.jpg" },
-];
+const PREVIEW_CAT_IMAGES = ["/landing/serpme.jpg", "/landing/adana.jpg"];
 const PREVIEW_ITEMS = [
   { name: "Adana Kebap", price: "₺620", img: "/landing/adana.jpg" },
   { name: "İskender", price: "₺680", img: "/landing/iskender.jpg" },
@@ -44,6 +42,7 @@ const PREVIEW_ITEMS = [
 
 /** Ayarlar sayfasındaki canlı menü önizlemesi (müşteri menüsüyle aynı sınıflar). */
 function MenuPreview({ form }: { form: Form }) {
+  const { t } = useUi();
   const langs = form.languages.slice(0, 3);
   return (
     <div className="preview-phone menu-page mode-light" style={themeVars(form.theme)}>
@@ -63,7 +62,7 @@ function MenuPreview({ form }: { form: Form }) {
         <div className="m-brand">
           {form.logoUrl && <img className="m-logo" src={form.logoUrl} alt="" />}
           <div className="m-brand-text">
-            <strong>{form.name || "Restoran adı"}</strong>
+            <strong>{form.name || t.settings.name}</strong>
             {form.description && <small>{form.description}</small>}
           </div>
         </div>
@@ -89,12 +88,12 @@ function MenuPreview({ form }: { form: Form }) {
       </div>
       <div className="m-cats">
         <div className="m-cats-track">
-          {PREVIEW_CATS.map((c) => (
-            <span key={c.name} className="m-cat">
+          {t.settings.previewCategories.map((name, i) => (
+            <span key={name} className="m-cat">
               <span className="m-cat-img">
-                <img src={c.img} alt="" />
+                <img src={PREVIEW_CAT_IMAGES[i]} alt="" />
               </span>
-              <span className="m-cat-name">{c.name}</span>
+              <span className="m-cat-name">{name}</span>
             </span>
           ))}
         </div>
@@ -102,7 +101,7 @@ function MenuPreview({ form }: { form: Form }) {
       <div className="m-content">
         <section className="m-section">
           <header className="m-section-head">
-            <h2>Izgaralar</h2>
+            <h2>{t.settings.previewSection}</h2>
           </header>
           <ul className="m-grid">
             {PREVIEW_ITEMS.map((p) => (
@@ -126,6 +125,8 @@ function MenuPreview({ form }: { form: Form }) {
 export function Settings() {
   const { me, setRestaurant } = useAuth();
   const toast = useToast();
+  const { t } = useUi();
+  const ts = t.settings;
   const r = me!.restaurant;
   const [saved, setSaved] = useState<Form>(() => toForm(r));
   const [form, setForm] = useState<Form>(saved);
@@ -156,7 +157,7 @@ export function Settings() {
       const next = toForm(result);
       setSaved(next);
       setForm(next);
-      toast.success("Ayarlar kaydedildi");
+      toast.success(ts.saved);
     } catch (err) {
       setError(errorMessage(err));
       toast.error(errorMessage(err));
@@ -167,18 +168,18 @@ export function Settings() {
 
   return (
     <form className="page settings-page" onSubmit={onSubmit}>
-      <PageHeader title="Ayarlar" subtitle="Restoranınızın bilgilerini ve menünüzün görünümünü özelleştirin." />
+      <PageHeader title={ts.title} subtitle={ts.subtitle} />
 
       <div className="settings-layout">
         <div className="settings-main">
-          <Card title="Restoran bilgileri" description="Menünüzün en üstünde görünür." icon={Store}>
+          <Card title={ts.infoTitle} description={ts.infoDesc} icon={Store}>
             <div className="form-row">
               <label className="field">
-                <span className="field-label">Restoran adı</span>
+                <span className="field-label">{ts.name}</span>
                 <input value={form.name} onChange={(e) => set("name", e.target.value)} required minLength={2} />
               </label>
               <label className="field">
-                <span className="field-label">Menü linki</span>
+                <span className="field-label">{ts.link}</span>
                 <div className="input-group">
                   <span className="addon">/menu/</span>
                   <input
@@ -193,22 +194,22 @@ export function Settings() {
             {form.slug !== saved.slug && (
               <div className="alert alert-warn" style={{ marginBottom: 18 }}>
                 <TriangleAlert size={17} />
-                Link değişirse daha önce yazdırdığınız QR kodlar çalışmaz; yenilerini yazdırmanız gerekir.
+                {ts.slugWarn}
               </div>
             )}
             <label className="field">
-              <span className="field-label">Kısa açıklama</span>
+              <span className="field-label">{ts.description}</span>
               <textarea
                 value={form.description}
                 onChange={(e) => set("description", e.target.value)}
                 rows={2}
                 maxLength={500}
-                placeholder="Örn. Odun ateşinde geleneksel lezzetler"
+                placeholder={ts.descriptionPh}
               />
             </label>
             <div className="form-row">
               <label className="field" style={{ marginBottom: 0 }}>
-                <span className="field-label">Çalışma saatleri</span>
+                <span className="field-label">{ts.hours}</span>
                 <div className="input-icon">
                   <Clock size={17} />
                   <input
@@ -220,7 +221,7 @@ export function Settings() {
                 </div>
               </label>
               <label className="field" style={{ marginBottom: 0 }}>
-                <span className="field-label">Telefon</span>
+                <span className="field-label">{ts.phone}</span>
                 <div className="input-icon">
                   <Phone size={17} />
                   <input
@@ -235,23 +236,23 @@ export function Settings() {
               </label>
             </div>
             <small className="field-hint" style={{ display: "block", marginTop: 8 }}>
-              Menünün en üstündeki şeritte görünür; telefona dokununca arama başlar.
+              {ts.contactHint}
             </small>
           </Card>
 
-          <Card title="Logo" description="Menünün başlığında restoran adının yanında görünür." icon={ImageIcon}>
+          <Card title={ts.logoTitle} description={ts.logoDesc} icon={ImageIcon}>
             <ImageInput
               value={form.logoUrl}
               onChange={(v) => set("logoUrl", v)}
-              label="Logo"
+              label={ts.logoTitle}
               shape="square"
-              hint="Şeffaf arka planlı PNG önerilir. Logo yoksa restoran adı yazıyla gösterilir."
+              hint={ts.logoHint}
             />
           </Card>
 
-          <Card title="Menü teması" description="Menünüzün renk paletini seçin." icon={Palette}>
-            <div className="theme-grid" role="radiogroup" aria-label="Menü teması">
-              {Object.entries(THEMES).map(([id, t]) => (
+          <Card title={ts.themeTitle} description={ts.themeDesc} icon={Palette}>
+            <div className="theme-grid" role="radiogroup" aria-label={ts.themeTitle}>
+              {Object.entries(THEMES).map(([id, theme]) => (
                 <button
                   type="button"
                   key={id}
@@ -260,11 +261,11 @@ export function Settings() {
                   className={`theme-option${form.theme === id ? " selected" : ""}`}
                   onClick={() => set("theme", id)}
                 >
-                  <span className="theme-swatch" style={{ background: t.hero }}>
+                  <span className="theme-swatch" style={{ background: theme.hero }}>
                     <span className="theme-dots">
-                      <i style={{ background: t.primary }} />
-                      <i style={{ background: t.accent }} />
-                      <i style={{ background: t.primaryDark }} />
+                      <i style={{ background: theme.primary }} />
+                      <i style={{ background: theme.accent }} />
+                      <i style={{ background: theme.primaryDark }} />
                     </span>
                     {form.theme === id && (
                       <span className="theme-check">
@@ -272,15 +273,15 @@ export function Settings() {
                       </span>
                     )}
                   </span>
-                  <span className="theme-name">{t.name}</span>
+                  <span className="theme-name">{ts.themeNames[id] ?? theme.name}</span>
                 </button>
               ))}
             </div>
           </Card>
 
-          <Card title="Diller ve para birimi" description="Menünüzün sunulacağı diller." icon={Globe}>
+          <Card title={ts.langsTitle} description={ts.langsDesc} icon={Globe}>
             <div className="field">
-              <span className="field-label">Menü dilleri</span>
+              <span className="field-label">{ts.menuLanguages}</span>
               <div className="lang-chips">
                 {Object.entries(LANGUAGES).map(([code, info]) => {
                   const on = form.languages.includes(code);
@@ -299,11 +300,11 @@ export function Settings() {
                   );
                 })}
               </div>
-              {form.languages.length === 0 && <p className="error-text">En az bir dil seçin.</p>}
+              {form.languages.length === 0 && <p className="error-text">{ts.pickOneLang}</p>}
             </div>
             <div className="form-row">
               <label className="field">
-                <span className="field-label">Varsayılan dil</span>
+                <span className="field-label">{ts.defaultLanguage}</span>
                 <select
                   value={form.defaultLanguage}
                   onChange={(e) => set("defaultLanguage", e.target.value)}
@@ -315,10 +316,10 @@ export function Settings() {
                     </option>
                   ))}
                 </select>
-                <small className="field-hint">Çevirisi olmayan içerik bu dilde gösterilir.</small>
+                <small className="field-hint">{ts.defaultLanguageHint}</small>
               </label>
               <label className="field">
-                <span className="field-label">Para birimi</span>
+                <span className="field-label">{ts.currency}</span>
                 <select value={form.currency} onChange={(e) => set("currency", e.target.value)}>
                   {CURRENCIES.map((c) => (
                     <option key={c}>{c}</option>
@@ -338,21 +339,21 @@ export function Settings() {
 
         <aside className="settings-preview">
           <div className="settings-preview-sticky">
-            <span className="preview-label">Canlı önizleme</span>
+            <span className="preview-label">{ts.preview}</span>
             <MenuPreview form={form} />
           </div>
         </aside>
       </div>
 
       <div className={`save-bar${dirty ? " visible" : ""}`} aria-hidden={!dirty}>
-        <span>Kaydedilmemiş değişiklikleriniz var</span>
+        <span>{ts.unsaved}</span>
         <div>
           <button type="button" className="btn btn-ghost" onClick={() => setForm(saved)} disabled={busy}>
-            Geri al
+            {ts.revert}
           </button>
           <button className="btn btn-primary" disabled={busy || form.languages.length === 0}>
             {busy && <LoaderCircle size={16} className="spin" />}
-            Değişiklikleri kaydet
+            {ts.saveChanges}
           </button>
         </div>
       </div>

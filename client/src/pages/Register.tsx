@@ -4,6 +4,7 @@ import { CircleAlert, Eye, EyeOff, LoaderCircle, Lock, Mail, Store } from "lucid
 import { useAuth } from "../auth/AuthContext";
 import { errorMessage } from "../lib/api";
 import { sanitizeSlugInput, slugify } from "../lib/slug";
+import { useUi } from "../lib/ui-lang";
 import { AuthLayout } from "./AuthLayout";
 
 function passwordStrength(pw: string) {
@@ -14,10 +15,10 @@ function passwordStrength(pw: string) {
   if (/\d/.test(pw) && /[^\w\s]/.test(pw)) score++;
   return score;
 }
-const STRENGTH = ["Çok zayıf", "Zayıf", "Orta", "İyi", "Güçlü"];
 
 export function Register() {
   const { me, register } = useAuth();
+  const { t } = useUi();
   const navigate = useNavigate();
   const [form, setForm] = useState({ restaurantName: "", slug: "", email: "", password: "" });
   const [slugEdited, setSlugEdited] = useState(false);
@@ -44,16 +45,16 @@ export function Register() {
 
   return (
     <AuthLayout
-      title="Restoranınızı oluşturun"
+      title={t.auth.registerTitle}
       subtitle={
         <>
-          Zaten hesabınız var mı? <Link to="/login">Giriş yapın</Link>
+          {t.auth.haveAccount} <Link to="/login">{t.auth.login}</Link>
         </>
       }
     >
       <form onSubmit={onSubmit} className="auth-form">
         <label className="field">
-          <span className="field-label">Restoran adı</span>
+          <span className="field-label">{t.auth.restaurantName}</span>
           <div className="input-icon">
             <Store size={17} />
             <input
@@ -67,13 +68,13 @@ export function Register() {
               }
               required
               minLength={2}
-              placeholder="Örn. Kebapçı Ali"
+              placeholder={t.auth.restaurantNamePh}
               autoFocus
             />
           </div>
         </label>
         <label className="field">
-          <span className="field-label">Menü linkiniz</span>
+          <span className="field-label">{t.auth.menuLink}</span>
           <div className="input-group">
             <span className="addon">{window.location.host}/menu/</span>
             <input
@@ -87,10 +88,10 @@ export function Register() {
               placeholder="kebapci-ali"
             />
           </div>
-          <small className="field-hint">QR kodlarınız bu linke yönlenir. Sonradan değiştirebilirsiniz.</small>
+          <small className="field-hint">{t.auth.menuLinkHint}</small>
         </label>
         <label className="field">
-          <span className="field-label">E-posta</span>
+          <span className="field-label">{t.auth.email}</span>
           <div className="input-icon">
             <Mail size={17} />
             <input
@@ -99,12 +100,12 @@ export function Register() {
               onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
               required
               autoComplete="email"
-              placeholder="ornek@restoran.com"
+              placeholder={t.auth.emailPh}
             />
           </div>
         </label>
         <label className="field">
-          <span className="field-label">Şifre</span>
+          <span className="field-label">{t.auth.password}</span>
           <div className="input-icon input-with-action">
             <Lock size={17} />
             <input
@@ -114,13 +115,13 @@ export function Register() {
               required
               minLength={8}
               autoComplete="new-password"
-              placeholder="En az 8 karakter"
+              placeholder={t.auth.passwordPh}
             />
             <button
               type="button"
               className="input-action"
               onClick={() => setShowPassword((s) => !s)}
-              aria-label={showPassword ? "Şifreyi gizle" : "Şifreyi göster"}
+              aria-label={showPassword ? t.auth.hidePw : t.auth.showPw}
             >
               {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
             </button>
@@ -132,7 +133,7 @@ export function Register() {
                   <span key={i} className={i < strength ? "on" : ""} />
                 ))}
               </div>
-              <small>{STRENGTH[strength]}</small>
+              <small>{t.auth.strength[strength]}</small>
             </div>
           )}
         </label>
@@ -144,7 +145,7 @@ export function Register() {
         )}
         <button className="btn btn-primary btn-lg btn-block" disabled={busy}>
           {busy ? <LoaderCircle size={18} className="spin" /> : null}
-          {busy ? "Oluşturuluyor…" : "Hesabımı oluştur"}
+          {busy ? t.auth.creating : t.auth.createAccount}
         </button>
       </form>
     </AuthLayout>

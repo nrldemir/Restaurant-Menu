@@ -2,53 +2,60 @@ import { useEffect, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Globe, QrCode, Zap } from "lucide-react";
 import { Logo } from "../components/Logo";
+import { LangToggle } from "../components/LangToggle";
+import { useUi } from "../lib/ui-lang";
 
 export function AuthLayout({ title, subtitle, children }: { title: string; subtitle: ReactNode; children: ReactNode }) {
+  const { t, lang } = useUi();
+  const [before, accent, after] = t.auth.headline;
+  const tagline = lang === "tr" ? "dijital menü" : "digital menu";
+
   useEffect(() => {
-    document.documentElement.lang = "tr";
+    document.documentElement.lang = lang;
     document.title = `${title} · EasyDine`;
-  }, [title]);
+  }, [title, lang]);
+
   return (
     <div className="auth">
       <aside className="auth-aside">
         <Link to="/" className="auth-aside-logo">
-          <Logo variant="light" />
+          <Logo variant="light" taglineText={tagline} />
         </Link>
         <div className="auth-aside-body">
           <h2 className="display">
-            Lezzetiniz kadar <em>güzel</em> bir menü.
+            {before} <em>{accent}</em> {after}
           </h2>
           <ul>
             <li>
               <span>
                 <QrCode size={18} />
               </span>
-              Masaya özel QR kodlar
+              {t.auth.featureQr}
             </li>
             <li>
               <span>
                 <Globe size={18} />
               </span>
-              8 dilde otomatik menü
+              {t.auth.featureLangs}
             </li>
             <li>
               <span>
                 <Zap size={18} />
               </span>
-              Fiyatlar saniyesinde güncel
+              {t.auth.featurePrices}
             </li>
           </ul>
         </div>
-        <blockquote>
-          Kâğıt menüleri yeniden bastırmaya son. Fiyat değiştiğinde iki dokunuşla güncelleyin; tüm masalarda anında
-          yayında.
-        </blockquote>
+        <blockquote>{t.auth.quote}</blockquote>
       </aside>
 
       <main className="auth-main">
-        <Link to="/" className="auth-mobile-logo">
-          <Logo />
-        </Link>
+        <div className="auth-topbar">
+          <Link to="/" className="auth-mobile-logo">
+            <Logo taglineText={tagline} />
+          </Link>
+          <LangToggle />
+        </div>
         <div className="auth-form-wrap">
           <h1 className="display">{title}</h1>
           <p className="auth-subtitle">{subtitle}</p>

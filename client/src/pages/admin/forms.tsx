@@ -7,6 +7,7 @@ import { Switch } from "../../components/ui";
 import { api, errorMessage } from "../../lib/api";
 import { pick } from "../../lib/i18n";
 import type { Category, Product, Restaurant, TranslationMap } from "../../lib/types";
+import { useUi } from "../../lib/ui-lang";
 
 function FormError({ error }: { error: string | null }) {
   if (!error) return null;
@@ -18,11 +19,12 @@ function FormError({ error }: { error: string | null }) {
   );
 }
 
-function SaveButton({ busy, label = "Kaydet" }: { busy: boolean; label?: string }) {
+function SaveButton({ busy, label }: { busy: boolean; label?: string }) {
+  const { t } = useUi();
   return (
     <button className="btn btn-primary" disabled={busy}>
       {busy && <LoaderCircle size={16} className="spin" />}
-      {busy ? "Kaydediliyor…" : label}
+      {busy ? t.common.saving : (label ?? t.common.save)}
     </button>
   );
 }
@@ -40,6 +42,7 @@ export function CategoryForm({ restaurant, initial, onSaved, onClose }: Category
   const [imageUrl, setImageUrl] = useState<string | null>(initial?.imageUrl ?? null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const { t } = useUi();
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -59,8 +62,8 @@ export function CategoryForm({ restaurant, initial, onSaved, onClose }: Category
 
   return (
     <Modal
-      title={initial ? "Kategoriyi düzenle" : "Yeni kategori"}
-      subtitle="Kategoriler menünüzdeki bölümlerdir: Kahvaltı, Ana Yemekler, Tatlılar…"
+      title={initial ? t.forms.editCategory : t.forms.newCategory}
+      subtitle={t.forms.categorySubtitle}
       onClose={onClose}
     >
       <form onSubmit={onSubmit}>
@@ -71,29 +74,29 @@ export function CategoryForm({ restaurant, initial, onSaved, onClose }: Category
             value={translations}
             onChange={setTranslations}
             withDescription
-            namePlaceholder="Örn. Ana Yemekler"
-            descriptionPlaceholder="İsteğe bağlı: Tüm yemeklerimiz odun ateşinde pişer."
+            namePlaceholder={t.forms.categoryNamePh}
+            descriptionPlaceholder={t.forms.categoryDescPh}
           />
           <ImageInput
             value={imageUrl}
             onChange={setImageUrl}
-            label="Kategori görseli"
-            hint="Menünün üstündeki kategori şeridinde görünür. Boş bırakılırsa ilk ürünün fotoğrafı kullanılır."
+            label={t.forms.categoryImage}
+            hint={t.forms.categoryImageHint}
           />
           <div className="toggle-row">
             <div>
-              <strong>Menüde göster</strong>
-              <small>Kapalıysa bu kategori müşterilere görünmez.</small>
+              <strong>{t.forms.showOnMenu}</strong>
+              <small>{t.forms.showOnMenuHint}</small>
             </div>
-            <Switch checked={isActive} onChange={setIsActive} label="Menüde göster" />
+            <Switch checked={isActive} onChange={setIsActive} label={t.forms.showOnMenu} />
           </div>
           <FormError error={error} />
         </div>
         <footer className="modal-footer">
           <button type="button" className="btn btn-ghost" onClick={onClose}>
-            Vazgeç
+            {t.common.cancel}
           </button>
-          <SaveButton busy={busy} label={initial ? "Kaydet" : "Kategori ekle"} />
+          <SaveButton busy={busy} label={initial ? undefined : t.forms.addCategory} />
         </footer>
       </form>
     </Modal>
@@ -110,8 +113,9 @@ interface ProductFormProps {
 }
 
 export function ProductForm({ restaurant, categories, categoryId, initial, onSaved, onClose }: ProductFormProps) {
+  const { t, lang } = useUi();
   const [translations, setTranslations] = useState<TranslationMap>(initial?.translations ?? {});
-  const [price, setPrice] = useState(initial ? String(initial.price).replace(".", ",") : "");
+  const [price, setPrice] = useState(() => (initial ? (lang === "tr" ? String(initial.price).replace(".", ",") : String(initial.price)) : ""));
   const [catId, setCatId] = useState(initial?.categoryId ?? categoryId);
   const [imageUrl, setImageUrl] = useState<string | null>(initial?.imageUrl ?? null);
   const [isAvailable, setIsAvailable] = useState(initial?.isAvailable ?? true);
@@ -122,7 +126,7 @@ export function ProductForm({ restaurant, categories, categoryId, initial, onSav
     e.preventDefault();
     const parsed = Number(price.replace(/\s/g, "").replace(",", "."));
     if (!price.trim() || !Number.isFinite(parsed) || parsed < 0) {
-      setError("Lütfen geçerli bir fiyat girin (örn. 250 veya 249,90)");
+      setError(t.forms.invalidPrice);
       return;
     }
     setBusy(true);
@@ -145,22 +149,22 @@ export function ProductForm({ restaurant, categories, categoryId, initial, onSav
       .find((p) => p.type === "currency")?.value ?? restaurant.currency;
 
   return (
-    <Modal title={initial ? "Ürünü düzenle" : "Yeni ürün"} onClose={onClose} size="lg">
+    <Modal title={initial ? t.forms.editItem : t.forms.newItem} onClose={onClose} size="lg">
       <form onSubmit={onSubmit}>
         <div className="modal-body product-form">
           <div className="product-form-media">
             <ImageInput
               value={imageUrl}
               onChange={setImageUrl}
-              label="Ürün fotoğrafı"
-              hint="Kare veya yatay, aydınlık bir fotoğraf en iyi sonucu verir."
+              label={t.forms.itemPhoto}
+              hint={t.forms.itemPhotoHint}
             />
             <div className="toggle-row">
               <div>
-                <strong>{isAvailable ? "Satışta" : "Tükendi"}</strong>
-                <small>Kapalıysa menüde "Tükendi" olarak görünür.</small>
+                <strong>{isAvailable ? t.common.available : t.common.soldOut}</strong>
+                <small>{t.forms.availableHint}</small>
               </div>
-              <Switch checked={isAvailable} onChange={setIsAvailable} label="Satışta" />
+              <Switch checked={isAvailable} onChange={setIsAvailable} label={t.common.available} />
             </div>
           </div>
           <div className="product-form-fields">
@@ -170,13 +174,13 @@ export function ProductForm({ restaurant, categories, categoryId, initial, onSav
               value={translations}
               onChange={setTranslations}
               withDescription
-              namePlaceholder="Örn. Adana Kebap"
-              descriptionPlaceholder="Malzemeler, porsiyon, servis şekli…"
+              namePlaceholder={t.forms.itemNamePh}
+              descriptionPlaceholder={t.forms.itemDescPh}
             />
             <div className="form-row">
               <label className="field">
                 <span className="field-label">
-                  Fiyat<b className="req">*</b>
+                  {t.forms.price}<b className="req">*</b>
                 </span>
                 <div className="input-group">
                   <span className="addon">{symbol}</span>
@@ -185,12 +189,12 @@ export function ProductForm({ restaurant, categories, categoryId, initial, onSav
                     value={price}
                     onChange={(e) => setPrice(e.target.value.replace(/[^\d.,\s]/g, ""))}
                     required
-                    placeholder="0,00"
+                    placeholder={lang === "tr" ? "0,00" : "0.00"}
                   />
                 </div>
               </label>
               <label className="field">
-                <span className="field-label">Kategori</span>
+                <span className="field-label">{t.forms.category}</span>
                 <select value={catId} onChange={(e) => setCatId(e.target.value)}>
                   {categories.map((c) => (
                     <option key={c.id} value={c.id}>
@@ -205,9 +209,9 @@ export function ProductForm({ restaurant, categories, categoryId, initial, onSav
         </div>
         <footer className="modal-footer">
           <button type="button" className="btn btn-ghost" onClick={onClose}>
-            Vazgeç
+            {t.common.cancel}
           </button>
-          <SaveButton busy={busy} label={initial ? "Kaydet" : "Ürünü ekle"} />
+          <SaveButton busy={busy} label={initial ? undefined : t.forms.addItem} />
         </footer>
       </form>
     </Modal>

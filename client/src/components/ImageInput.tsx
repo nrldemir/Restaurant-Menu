@@ -1,6 +1,7 @@
 import { useRef, useState, type DragEvent } from "react";
 import { ImagePlus, LoaderCircle, RefreshCw, Trash2 } from "lucide-react";
 import { errorMessage, uploadImage } from "../lib/api";
+import { useUi } from "../lib/ui-lang";
 
 interface Props {
   value: string | null;
@@ -11,7 +12,8 @@ interface Props {
   shape?: "square" | "wide" | "photo";
 }
 
-export function ImageInput({ value, onChange, label = "Görsel", hint, shape = "photo" }: Props) {
+export function ImageInput({ value, onChange, label, hint, shape = "photo" }: Props) {
+  const { t } = useUi();
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
@@ -20,7 +22,7 @@ export function ImageInput({ value, onChange, label = "Görsel", hint, shape = "
   async function handleFile(file: File | undefined) {
     if (!file) return;
     if (!file.type.startsWith("image/")) {
-      setError("Lütfen bir görsel dosyası seçin");
+      setError(t.image.notImage);
       return;
     }
     setError(null);
@@ -45,7 +47,7 @@ export function ImageInput({ value, onChange, label = "Görsel", hint, shape = "
 
   return (
     <div className="field">
-      <span className="field-label">{label}</span>
+      <span className="field-label">{label ?? t.image.label}</span>
       <div
         className={`dropzone dropzone-${shape}${dragOver ? " over" : ""}${value ? " has-image" : ""}`}
         onDragOver={(e) => {
@@ -60,18 +62,18 @@ export function ImageInput({ value, onChange, label = "Görsel", hint, shape = "
             <img src={value} alt="" />
             <div className="dropzone-actions">
               <button type="button" className="chip-btn" onClick={open} disabled={uploading}>
-                <RefreshCw size={14} /> Değiştir
+                <RefreshCw size={14} /> {t.image.change}
               </button>
               <button type="button" className="chip-btn" onClick={() => onChange(null)} disabled={uploading}>
-                <Trash2 size={14} /> Kaldır
+                <Trash2 size={14} /> {t.image.remove}
               </button>
             </div>
           </>
         ) : (
           <button type="button" className="dropzone-empty" onClick={open} disabled={uploading}>
             {uploading ? <LoaderCircle size={24} className="spin" /> : <ImagePlus size={24} strokeWidth={1.75} />}
-            <strong>{uploading ? "Yükleniyor…" : "Görsel yükle"}</strong>
-            {!uploading && <small>Sürükleyip bırakın veya tıklayın</small>}
+            <strong>{uploading ? t.image.uploading : t.image.upload}</strong>
+            {!uploading && <small>{t.image.dropHint}</small>}
           </button>
         )}
         {uploading && value && (
@@ -80,7 +82,7 @@ export function ImageInput({ value, onChange, label = "Görsel", hint, shape = "
           </div>
         )}
       </div>
-      <small className="field-hint">{hint ?? "JPG, PNG veya WEBP · en fazla 5 MB"}</small>
+      <small className="field-hint">{hint ?? t.image.hint}</small>
       <input
         ref={inputRef}
         type="file"

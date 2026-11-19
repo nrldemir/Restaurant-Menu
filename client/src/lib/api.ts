@@ -1,3 +1,5 @@
+import { translateServerError } from "./ui-lang";
+
 const TOKEN_KEY = "rm_token";
 
 export const tokenStore = {
@@ -70,5 +72,5 @@ export async function uploadImage(file: File): Promise<string> {
 }
 
 export function errorMessage(err: unknown) {
-  return err instanceof Error ? err.message : "Bir hata oluştu";
+  return translateServerError(err instanceof Error ? err.message : "Bir hata oluştu");
 }

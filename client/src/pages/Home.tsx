@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -15,9 +15,10 @@ import {
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import { Logo, LogoMark, Ornament } from "../components/Logo";
+import { LangToggle } from "../components/LangToggle";
+import { useUi, type UiLang } from "../lib/ui-lang";
 
-type SiteLang = "en" | "tr";
-const LANG_KEY = "ed_site_lang";
+type SiteLang = UiLang;
 
 /** Tanıtım sayfası metinleri. Varsayılan dil İngilizce. */
 const COPY = {
@@ -134,14 +135,6 @@ const COPY = {
 const FEATURE_ICONS = [Timer, Globe, QrCode, Zap, ImageIcon, Palette];
 const STRIP_IMAGES = ["adana", "menemen", "lahmacun", "kunefe", "iskender", "pide", "baklava", "serpme"];
 
-function readLang(): SiteLang {
-  try {
-    return localStorage.getItem(LANG_KEY) === "tr" ? "tr" : "en";
-  } catch {
-    return "en";
-  }
-}
-
 function PhoneMockup({ m, lang }: { m: (typeof COPY)[SiteLang]["mock"]; lang: SiteLang }) {
   return (
     <div className="phone">
@@ -193,23 +186,13 @@ function PhoneMockup({ m, lang }: { m: (typeof COPY)[SiteLang]["mock"]; lang: Si
 
 export function Home() {
   const { me } = useAuth();
-  const [lang, setLang] = useState<SiteLang>(readLang);
+  const { lang } = useUi();
   const t = COPY[lang];
 
   useEffect(() => {
     document.documentElement.lang = lang;
     document.title = lang === "tr" ? "EasyDine · Dijital Menü" : "EasyDine · Digital Menu";
   }, [lang]);
-
-  function switchLang() {
-    const next: SiteLang = lang === "en" ? "tr" : "en";
-    setLang(next);
-    try {
-      localStorage.setItem(LANG_KEY, next);
-    } catch {
-      /* yok say */
-    }
-  }
 
   const strip = STRIP_IMAGES.map((img, i) => ({ src: `/landing/${img}.jpg`, name: t.strip[i] }));
 
@@ -219,15 +202,7 @@ export function Home() {
         <nav className="landing-nav">
           <Logo variant="light" taglineText={t.tagline} />
           <div className="landing-nav-actions">
-            <button
-              type="button"
-              className="btn btn-ghost site-lang"
-              onClick={switchLang}
-              aria-label={lang === "en" ? "Türkçe'ye geç" : "Switch to English"}
-              title={lang === "en" ? "Türkçe" : "English"}
-            >
-              <Globe size={16} /> {lang === "en" ? "TR" : "EN"}
-            </button>
+            <LangToggle className="btn btn-ghost site-lang" />
             {me ? (
               <Link className="btn btn-gold" to="/admin">
                 {t.toPanel} <ArrowRight size={16} />

@@ -3,10 +3,12 @@ import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { CircleAlert, Eye, EyeOff, LoaderCircle, Lock, Mail, Sparkles } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import { errorMessage } from "../lib/api";
+import { useUi } from "../lib/ui-lang";
 import { AuthLayout } from "./AuthLayout";
 
 export function Login() {
   const { me, login } = useAuth();
+  const { t } = useUi();
   const navigate = useNavigate();
   const from = (useLocation().state as { from?: string } | null)?.from ?? "/admin";
   const [email, setEmail] = useState("");
@@ -32,16 +34,16 @@ export function Login() {
 
   return (
     <AuthLayout
-      title="Tekrar hoş geldiniz"
+      title={t.auth.loginTitle}
       subtitle={
         <>
-          Hesabınız yok mu? <Link to="/register">Ücretsiz kayıt olun</Link>
+          {t.auth.noAccount} <Link to="/register">{t.auth.signUp}</Link>
         </>
       }
     >
       <form onSubmit={submit} className="auth-form">
         <label className="field">
-          <span className="field-label">E-posta</span>
+          <span className="field-label">{t.auth.email}</span>
           <div className="input-icon">
             <Mail size={17} />
             <input
@@ -50,12 +52,12 @@ export function Login() {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              placeholder="ornek@restoran.com"
+              placeholder={t.auth.emailPh}
             />
           </div>
         </label>
         <label className="field">
-          <span className="field-label">Şifre</span>
+          <span className="field-label">{t.auth.password}</span>
           <div className="input-icon input-with-action">
             <Lock size={17} />
             <input
@@ -70,7 +72,7 @@ export function Login() {
               type="button"
               className="input-action"
               onClick={() => setShowPassword((s) => !s)}
-              aria-label={showPassword ? "Şifreyi gizle" : "Şifreyi göster"}
+              aria-label={showPassword ? t.auth.hidePw : t.auth.showPw}
             >
               {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
             </button>
@@ -84,12 +86,12 @@ export function Login() {
         )}
         <button className="btn btn-primary btn-lg btn-block" disabled={busy}>
           {busy ? <LoaderCircle size={18} className="spin" /> : null}
-          {busy ? "Giriş yapılıyor…" : "Giriş yap"}
+          {busy ? t.auth.loggingIn : t.auth.login}
         </button>
       </form>
 
       <div className="auth-divider">
-        <span>veya</span>
+        <span>{t.auth.or}</span>
       </div>
       <button
         type="button"
@@ -97,7 +99,7 @@ export function Login() {
         disabled={busy}
         onClick={() => submit(undefined, { email: "demo@example.com", password: "demo1234" })}
       >
-        <Sparkles size={16} /> Demo hesapla dene
+        <Sparkles size={16} /> {t.auth.tryDemo}
       </button>
     </AuthLayout>
   );

@@ -5,6 +5,7 @@ import "@fontsource-variable/plus-jakarta-sans";
 import "@fontsource-variable/cormorant-garamond";
 import "@fontsource-variable/cormorant-garamond/wght-italic.css";
 import { AuthProvider } from "./auth/AuthContext";
+import { UiLangProvider } from "./lib/ui-lang";
 import { ToastProvider } from "./components/Toast";
 import { ConfirmProvider } from "./components/Confirm";
 import { App } from "./App";
@@ -20,13 +21,15 @@ if (import.meta.env.PROD && "serviceWorker" in navigator) {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-      <ToastProvider>
-        <ConfirmProvider>
-          <AuthProvider>
-            <App />
-          </AuthProvider>
-        </ConfirmProvider>
-      </ToastProvider>
+      <UiLangProvider>
+        <ToastProvider>
+          <ConfirmProvider>
+            <AuthProvider>
+              <App />
+            </AuthProvider>
+          </ConfirmProvider>
+        </ToastProvider>
+      </UiLangProvider>
     </BrowserRouter>
   </StrictMode>,
 );

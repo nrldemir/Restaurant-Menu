@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
+import { useUi } from "../lib/ui-lang";
 
 interface Props {
   title: string;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export function Modal({ title, subtitle, onClose, children, size = "md" }: Props) {
+  const { t } = useUi();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", onKey);
@@ -30,7 +32,7 @@ export function Modal({ title, subtitle, onClose, children, size = "md" }: Props
             <h2>{title}</h2>
             {subtitle && <p>{subtitle}</p>}
           </div>
-          <button type="button" className="icon-btn" onClick={onClose} aria-label="Kapat">
+          <button type="button" className="icon-btn" onClick={onClose} aria-label={t.common.close}>
             <X size={18} />
           </button>
         </header>

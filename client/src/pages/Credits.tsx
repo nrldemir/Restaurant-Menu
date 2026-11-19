@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Logo } from "../components/Logo";
+import { LangToggle } from "../components/LangToggle";
+import { useUi } from "../lib/ui-lang";
 
 interface Credit {
   file: string;
@@ -15,6 +17,7 @@ interface Credit {
 /** Demo görsellerinin yazar ve lisans bilgileri (CC lisansları atıf ister). */
 export function Credits() {
   const [credits, setCredits] = useState<Credit[] | null>(null);
+  const { t, lang } = useUi();
 
   useEffect(() => {
     fetch("/credits.json")
@@ -27,18 +30,18 @@ export function Credits() {
     <div className="credits-page">
       <nav className="landing-nav">
         <Link to="/">
-          <Logo />
+          <Logo taglineText={lang === "tr" ? "dijital menü" : "digital menu"} />
         </Link>
-        <Link className="btn btn-ghost" to="/">
-          <ArrowLeft size={16} /> Ana sayfa
-        </Link>
+        <div className="landing-nav-actions">
+          <LangToggle />
+          <Link className="btn btn-ghost" to="/">
+            <ArrowLeft size={16} /> {t.credits.home}
+          </Link>
+        </div>
       </nav>
       <main className="credits-main">
-        <h1 className="display">Görsel kaynakları</h1>
-        <p className="muted">
-          Demo menüdeki ve bu sitedeki yemek fotoğrafları Wikimedia Commons'tan alınmıştır ve aşağıdaki serbest lisanslarla
-          kullanılmaktadır. Görseller yeniden boyutlandırılmıştır.
-        </p>
+        <h1 className="display">{t.credits.title}</h1>
+        <p className="muted">{t.credits.text}</p>
         <ul className="credit-list">
           {credits?.map((c) => (
             <li key={c.file}>

@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
 import { TriangleAlert } from "lucide-react";
 import { Modal } from "./Modal";
+import { useUi } from "../lib/ui-lang";
 
 interface ConfirmOptions {
   title: string;
@@ -15,6 +16,7 @@ const ConfirmContext = createContext<ConfirmFn | null>(null);
 
 export function ConfirmProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<(ConfirmOptions & { resolve(v: boolean): void }) | null>(null);
+  const { t } = useUi();
 
   const confirm = useCallback<ConfirmFn>(
     (opts) => new Promise<boolean>((resolve) => setState({ ...opts, resolve })),
@@ -41,10 +43,10 @@ export function ConfirmProvider({ children }: { children: ReactNode }) {
           </div>
           <footer className="modal-footer">
             <button className="btn btn-ghost" onClick={() => close(false)}>
-              Vazgeç
+              {t.common.cancel}
             </button>
             <button className={`btn ${state.danger ? "btn-danger" : "btn-primary"}`} onClick={() => close(true)} autoFocus>
-              {state.confirmText ?? "Onayla"}
+              {state.confirmText ?? t.common.confirm}
             </button>
           </footer>
         </Modal>

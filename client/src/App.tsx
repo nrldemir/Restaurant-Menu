@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useAuth } from "./auth/AuthContext";
 import { LogoMark } from "./components/Logo";
+import { useUi } from "./lib/ui-lang";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
@@ -25,6 +26,20 @@ function RequireAuth({ children }: { children: ReactNode }) {
   return children;
 }
 
+function NotFound() {
+  const { t } = useUi();
+  return (
+    <div className="page-center not-found">
+      <LogoMark size={56} />
+      <h1 className="display">{t.app.notFoundTitle}</h1>
+      <p>{t.app.notFoundText}</p>
+      <Link className="btn btn-primary" to="/">
+        {t.app.backHome}
+      </Link>
+    </div>
+  );
+}
+
 export function App() {
   return (
     <Routes>
@@ -45,19 +60,7 @@ export function App() {
         <Route path="settings" element={<Settings />} />
         <Route path="qr" element={<QrCodes />} />
       </Route>
-      <Route
-        path="*"
-        element={
-          <div className="page-center not-found">
-            <LogoMark size={56} />
-            <h1 className="display">Sayfa bulunamadı</h1>
-            <p>Aradığınız sayfa taşınmış veya hiç var olmamış olabilir.</p>
-            <Link className="btn btn-primary" to="/">
-              Ana sayfaya dön
-            </Link>
-          </div>
-        }
-      />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
