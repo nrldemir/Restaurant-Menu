@@ -30,17 +30,28 @@ const STEPS = [
   { n: "3", title: "QR'ı masalara koyun", text: "Müşterileriniz okutsun, menü telefonlarında." },
 ];
 
+const FOOD_STRIP = [
+  { src: "/landing/adana.jpg", name: "Adana Kebap" },
+  { src: "/landing/menemen.jpg", name: "Menemen" },
+  { src: "/landing/lahmacun.jpg", name: "Lahmacun" },
+  { src: "/landing/kunefe.jpg", name: "Künefe" },
+  { src: "/landing/iskender.jpg", name: "İskender" },
+  { src: "/landing/pide.jpg", name: "Pide" },
+  { src: "/landing/baklava.jpg", name: "Baklava" },
+  { src: "/landing/serpme.jpg", name: "Serpme Kahvaltı" },
+];
+
 function PhoneMockup() {
   const items = [
-    { name: "Adana Kebap", desc: "Közlenmiş domates, biber ve lavaş", price: "₺480", hue: "#e2643a" },
-    { name: "Izgara Köfte", desc: "Pilav ve mevsim salata ile", price: "₺420", hue: "#c98a3a" },
-    { name: "Künefe", desc: "Antep fıstıklı, sıcak servis", price: "₺240", hue: "#e0a43a" },
+    { name: "Adana Kebap", desc: "Acılı kuzu eti, közlenmiş domates ve lavaş", price: "₺620", img: "/landing/adana.jpg" },
+    { name: "İskender", desc: "Pide üzerinde döner, tereyağı ve yoğurt", price: "₺680", img: "/landing/iskender.jpg" },
+    { name: "Künefe", desc: "Antep fıstıklı, sıcak servis", price: "₺290", img: "/landing/kunefe.jpg" },
   ];
   return (
     <div className="phone">
       <div className="phone-notch" />
       <div className="phone-screen">
-        <div className="pm-hero">
+        <div className="pm-hero" style={{ backgroundImage: "linear-gradient(180deg, rgb(0 0 0 / 0.45), rgb(0 0 0 / 0.1) 50%, rgb(0 0 0 / 0.3)), url(/landing/cover.jpg)" }}>
           <span className="pm-table">Masa 7</span>
           <span className="pm-lang">TR</span>
         </div>
@@ -48,14 +59,14 @@ function PhoneMockup() {
           <div className="pm-logo">
             <LogoMark size={44} />
           </div>
-          <strong className="display">Demo Restoran</strong>
-          <small>Geleneksel lezzetler, modern sunum</small>
+          <strong className="display">Lokma Mutfak</strong>
+          <small>Odun ateşinde Anadolu lezzetleri</small>
         </div>
         <div className="pm-search">
           <Search size={13} /> Menüde ara
         </div>
         <div className="pm-chips">
-          <span className="on">Ana Yemekler</span>
+          <span className="on">Izgaralar</span>
           <span>Tatlılar</span>
           <span>İçecekler</span>
         </div>
@@ -67,7 +78,7 @@ function PhoneMockup() {
                 <small>{i.desc}</small>
                 <em>{i.price}</em>
               </div>
-              <span className="pm-img" style={{ background: `radial-gradient(circle at 35% 35%, #fff6 0, transparent 40%), ${i.hue}` }} />
+              <img className="pm-img" src={i.img} alt="" />
             </div>
           ))}
         </div>
@@ -136,6 +147,9 @@ export function Home() {
         </div>
 
         <div className="hero-visual">
+          <img className="plate plate-1" src="/landing/lahmacun.jpg" alt="" />
+          <img className="plate plate-2" src="/landing/menemen.jpg" alt="" />
+          <img className="plate plate-3" src="/landing/baklava.jpg" alt="" />
           <PhoneMockup />
           <div className="float-card float-qr">
             <QrCode size={28} />
@@ -155,6 +169,17 @@ export function Home() {
           </div>
         </div>
       </header>
+
+      <section className="food-strip" aria-label="Örnek menü görselleri">
+        <div className="food-track">
+          {[...FOOD_STRIP, ...FOOD_STRIP].map((f, i) => (
+            <figure key={i} aria-hidden={i >= FOOD_STRIP.length}>
+              <img src={f.src} alt={i < FOOD_STRIP.length ? f.name : ""} loading="lazy" />
+              <figcaption>{f.name}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
 
       <section className="features">
         <div className="section-head">
@@ -202,7 +227,10 @@ export function Home() {
 
       <footer className="landing-footer">
         <Logo size={28} tagline={false} />
-        <span>© {new Date().getFullYear()} Lokma · Restoranlar için dijital menü</span>
+        <span>
+          © {new Date().getFullYear()} Lokma · Restoranlar için dijital menü ·{" "}
+          <Link to="/kaynaklar">Görsel kaynakları</Link>
+        </span>
       </footer>
     </div>
   );

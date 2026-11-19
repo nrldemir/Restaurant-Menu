@@ -1,5 +1,6 @@
 .auth {
   min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   grid-template-columns: minmax(380px, 0.9fr) 1.1fr;
 }
@@ -214,7 +215,7 @@
   }
   .auth-main {
     justify-content: flex-start;
-    padding: 24px 16px 40px;
+    padding: max(24px, env(safe-area-inset-top)) 16px max(40px, env(safe-area-inset-bottom));
   }
   .auth-mobile-logo {
     display: block;

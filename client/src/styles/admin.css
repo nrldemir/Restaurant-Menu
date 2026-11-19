@@ -171,7 +171,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px 12px 10px 16px;
+    padding: calc(10px + env(safe-area-inset-top)) 12px 10px 16px;
     background: color-mix(in srgb, var(--surface) 88%, transparent);
     backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--border);
@@ -565,6 +565,45 @@
   font-weight: 650;
   color: var(--text-2);
   cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .editor-products {
+    padding: 16px 12px;
+  }
+  .ptile-img {
+    aspect-ratio: 4 / 3;
+  }
+  .ptile-body {
+    padding: 10px 12px 8px;
+  }
+  .ptile-body h3 {
+    font-size: 14px;
+  }
+  .ptile-body p {
+    display: none;
+  }
+  .ptile-meta {
+    margin-top: 4px;
+    flex-wrap: wrap;
+  }
+  .ptile-price {
+    font-size: 14.5px;
+  }
+  .ptile-foot {
+    padding: 6px 4px 6px 10px;
+  }
+  .ptile-switch span {
+    display: none;
+  }
+  .ptile-foot .icon-btn {
+    width: 30px;
+    height: 30px;
+  }
 }
 
 /* ---------- Ürün formu ---------- */

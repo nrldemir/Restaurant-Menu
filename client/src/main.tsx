@@ -9,6 +9,13 @@ import { ConfirmProvider } from "./components/Confirm";
 import { App } from "./App";
 import "./styles/index.css";
 
+// Service worker sadece production build'de (geliştirmede eski dosyaları önbellekten sunmasın diye)
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => undefined);
+  });
+}
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>

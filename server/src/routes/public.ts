@@ -32,6 +32,44 @@ publicRouter.get("/restaurants/:slug/menu", async (req, res) => {
   });
 });
 
+const THEME_COLORS: Record<string, string> = {
+  nar: "#C2361A",
+  safran: "#A85F00",
+  zeytin: "#4A7536",
+  ege: "#17658A",
+  murdum: "#7E2C5F",
+  antrasit: "#2F2924",
+};
+
+/** Müşteri menüyü telefonunun ana ekranına eklediğinde restoranın adı ve rengiyle açılsın. */
+publicRouter.get("/restaurants/:slug/manifest.webmanifest", async (req, res) => {
+  const r = await prisma.restaurant.findUnique({ where: { slug: req.params.slug } });
+  if (!r) throw new HttpError(404, "Restoran bulunamadı");
+
+  const icons = r.logoUrl
+    ? [{ src: r.logoUrl, sizes: "512x512", purpose: "any" }]
+    : [
+        { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+        { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+        { src: "/icons/icon-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+      ];
+
+  res.type("application/manifest+json").send(
+    JSON.stringify({
+      name: r.name,
+      short_name: r.name.length > 14 ? r.name.slice(0, 14) : r.name,
+      description: r.description ?? undefined,
+      lang: r.defaultLanguage,
+      start_url: `/menu/${r.slug}`,
+      scope: `/menu/${r.slug}`,
+      display: "standalone",
+      background_color: "#fbf8f4",
+      theme_color: THEME_COLORS[r.theme] ?? THEME_COLORS.nar,
+      icons,
+    }),
+  );
+});
+
 /**
  * Menü linkine giden QR kod. Herkese açık; sadece menünün public adresini içerir.
  * ?table=5      -> masaya özel link (/menu/slug?table=5)

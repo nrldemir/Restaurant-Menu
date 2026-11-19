@@ -9,10 +9,20 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },
+  "browserslist": [
+    "iOS >= 15",
+    "Safari >= 15",
+    "last 2 Chrome versions",
+    "last 2 ChromeAndroid versions",
+    "last 2 Firefox versions",
+    "last 2 Edge versions",
+    "last 2 Samsung versions"
+  ],
   "devDependencies": {
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.3.0",
+    "autoprefixer": "^10.6.2",
     "typescript": "^7.0.2",
     "vite": "^8.3.8"
   },

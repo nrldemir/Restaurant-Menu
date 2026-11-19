@@ -40,13 +40,23 @@ Renkler, yazı tipleri ve gölgeler [client/src/styles/tokens.css](client/src/st
 - Başlıklar **Fraunces**, metinler **Plus Jakarta Sans** (paket olarak gömülü, harici istek yok).
 - Menü temaları [client/src/lib/themes.ts](client/src/lib/themes.ts) içinde; yeni tema eklerken `server/src/lib/languages.ts` içindeki `THEMES` listesine de ekleyin.
 
-## Telefonla test
+## Telefondan test (iOS ve Android)
 
-QR kodlar `server/.env` içindeki `CLIENT_URL` adresine yönlenir. Varsayılan `localhost` telefondan açılmaz; aynı Wi‑Fi'deki bir telefonla denemek için bilgisayarınızın yerel IP'sini yazın (Vite başlarken "Network" satırında görünür), örn.:
+`server/.env` içinde `CLIENT_URL="auto"` iken sunucu bilgisayarın yerel ağ IP'sini kendisi bulur; menü linkleri ve QR kodlar bu adrese yönlenir. `npm run dev` çıktısında adres görünür:
 
 ```
-CLIENT_URL="http://192.168.1.20:5173"
+[server] Telefondan test (aynı Wi-Fi): http://192.168.x.x:5173  ·  panel: http://192.168.x.x:5173/admin
 ```
+
+1. Telefon bilgisayarla **aynı Wi‑Fi** ağında olmalı.
+2. Panelde **QR Kodlar** sayfasındaki bir masa kodunu telefon kamerasıyla okutun veya adresi telefonun tarayıcısına yazın.
+3. **Ana ekrana ekleme:** iPhone'da Safari → Paylaş → *Ana Ekrana Ekle*; Android'de Chrome → ⋮ → *Ana ekrana ekle*. Menü sayfasından eklenirse restoranın adı ve rengiyle, panelden eklenirse "Lokma" olarak açılır.
+
+Notlar: Windows ilk çalıştırmada Node.js için güvenlik duvarı izni sorar; izin vermezseniz telefon bağlanamaz. Android'in tam PWA kurulumu (çevrimdışı çalışma) HTTPS ister; yerel ağda http ile ana ekrana kısayol eklenir. Canlıda `CLIENT_URL`'i gerçek HTTPS alan adınız yapın.
+
+## Demo veri
+
+`npm run db:seed -w server` "Lokma Mutfak" demo restoranını 6 kategori, 21 ürün ve 3 dille (TR/EN/DE) yeniden oluşturur. Fotoğraflar `server/prisma/seed-images/` klasöründedir ve Wikimedia Commons'tan serbest lisanslarla alınmıştır; yazar ve lisanslar [CREDITS.md](server/prisma/seed-images/CREDITS.md) dosyasında ve uygulamadaki `/kaynaklar` sayfasındadır.
 
 ## Komutlar
 

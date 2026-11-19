@@ -14,6 +14,7 @@
   --m-chip: #ffffff;
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--m-bg);
   color: var(--m-text);
 }
@@ -404,6 +405,8 @@
 .menu-footer {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 18px;
   padding: 24px 0 max(40px, env(safe-area-inset-bottom));
 }
 .menu-footer a {

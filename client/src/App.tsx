@@ -6,6 +6,7 @@ import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { PublicMenu } from "./pages/PublicMenu";
+import { Credits } from "./pages/Credits";
 import { AdminLayout } from "./pages/admin/AdminLayout";
 import { MenuEditor } from "./pages/admin/MenuEditor";
 import { Settings } from "./pages/admin/Settings";
@@ -31,6 +32,7 @@ export function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/menu/:slug" element={<PublicMenu />} />
+      <Route path="/kaynaklar" element={<Credits />} />
       <Route
         path="/admin"
         element={

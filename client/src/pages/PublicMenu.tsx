@@ -4,7 +4,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { Check, ChevronDown, Globe, Search, UtensilsCrossed, X } from "lucide-react";
 import { api, ApiError } from "../lib/api";
 import { formatPrice, LANGUAGES, pick, uiText } from "../lib/i18n";
-import { themeVars } from "../lib/themes";
+import { getTheme, themeVars } from "../lib/themes";
 import type { Product, PublicMenu as Menu } from "../lib/types";
 import { LogoMark } from "../components/Logo";
 
@@ -111,6 +111,26 @@ export function PublicMenu() {
     document.documentElement.lang = lang;
   }, [menu, lang]);
 
+  // "Ana ekrana ekle": restoranın adı, rengi ve menü linkiyle açılsın
+  useEffect(() => {
+    if (!menu) return;
+    const { restaurant } = menu;
+    const set = (selector: string, attr: string, value: string) => {
+      const el = document.querySelector<HTMLElement>(selector);
+      if (!el) return () => undefined;
+      const prev = el.getAttribute(attr) ?? "";
+      el.setAttribute(attr, value);
+      return () => el.setAttribute(attr, prev);
+    };
+    const restore = [
+      set('link[rel="manifest"]', "href", `/api/public/restaurants/${encodeURIComponent(slug)}/manifest.webmanifest`),
+      set('meta[name="theme-color"]', "content", getTheme(restaurant.theme).primary),
+      set('meta[name="apple-mobile-web-app-title"]', "content", restaurant.name),
+      ...(restaurant.logoUrl ? [set('link[rel="apple-touch-icon"]', "href", restaurant.logoUrl)] : []),
+    ];
+    return () => restore.forEach((fn) => fn());
+  }, [menu, slug]);
+
   function changeLang(next: string) {
     setLang(next);
     setLangOpen(false);
@@ -140,7 +160,11 @@ export function PublicMenu() {
   useEffect(() => {
     const el = sentinelRef.current;
     if (!el) return;
-    const io = new IntersectionObserver(([e]) => setStuck(!e.isIntersecting));
+    const io = new IntersectionObserver(([e]) => {
+      setStuck(!e.isIntersecting);
+      // En üste dönüldüğünde ilk kategori aktif görünsün
+      if (e.isIntersecting) setActiveCat(null);
+    });
     io.observe(el);
     return () => io.disconnect();
   }, [status]);
@@ -160,7 +184,11 @@ export function PublicMenu() {
   }, [categories]);
 
   useEffect(() => {
-    if (!activeCat || !navRef.current) return;
+    if (!navRef.current) return;
+    if (!activeCat) {
+      navRef.current.scrollTo({ left: 0, behavior: "smooth" });
+      return;
+    }
     const chip = navRef.current.querySelector<HTMLElement>(`[data-chip="${activeCat}"]`);
     if (!chip) return;
     const nav = navRef.current;
@@ -312,6 +340,11 @@ export function PublicMenu() {
           <a href="/" target="_blank" rel="noreferrer">
             <LogoMark size={18} /> Lokma ile hazırlandı
           </a>
+          {slug === "demo-restoran" && (
+            <a href="/kaynaklar" target="_blank" rel="noreferrer">
+              Görsel kaynakları
+            </a>
+          )}
         </footer>
       </div>
 
