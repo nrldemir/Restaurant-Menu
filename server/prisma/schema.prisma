@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  passwordHash String
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+}
+
+model Restaurant {
+  id              String     @id @default(cuid())
+  slug            String     @unique
+  name            String
+  description     String?
+  logoUrl         String?
+  currency        String     @default("TRY")
+  /// Virgülle ayrılmış dil kodları, örn. "tr,en"
+  languages       String     @default("tr")
+  defaultLanguage String     @default("tr")
+  users           User[]
+  categories      Category[]
+  products        Product[]
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+model Category {
+  id           String                @id @default(cuid())
+  restaurantId String
+  restaurant   Restaurant            @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  sortOrder    Int                   @default(0)
+  isActive     Boolean               @default(true)
+  translations CategoryTranslation[]
+  products     Product[]
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+
+  @@index([restaurantId])
+}
+
+model CategoryTranslation {
+  id          String   @id @default(cuid())
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  lang        String
+  name        String
+  description String?
+
+  @@unique([categoryId, lang])
+}
+
+model Product {
+  id           String               @id @default(cuid())
+  restaurantId String
+  restaurant   Restaurant           @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  categoryId   String
+  category     Category             @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  price        Float
+  imageUrl     String?
+  isAvailable  Boolean              @default(true)
+  sortOrder    Int                  @default(0)
+  translations ProductTranslation[]
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  @@index([restaurantId])
+  @@index([categoryId])
+}
+
+model ProductTranslation {
+  id          String  @id @default(cuid())
+  productId   String
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  lang        String
+  name        String
+  description String?
+
+  @@unique([productId, lang])
+}
