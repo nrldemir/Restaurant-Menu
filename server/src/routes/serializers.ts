@@ -21,6 +21,7 @@ export function serializeRestaurant(r: Restaurant) {
     currency: r.currency,
     languages: parseLanguages(r.languages),
     defaultLanguage: r.defaultLanguage,
+    isActive: r.isActive,
     menuUrl: menuUrl(r.slug),
   };
 }

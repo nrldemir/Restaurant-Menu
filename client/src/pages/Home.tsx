@@ -13,7 +13,7 @@ import {
   Timer,
   Zap,
 } from "lucide-react";
-import { useAuth } from "../auth/AuthContext";
+import { homeFor, useAuth } from "../auth/AuthContext";
 import { Logo, LogoMark, Ornament } from "../components/Logo";
 import { LangToggle } from "../components/LangToggle";
 import { useUi, type UiLang } from "../lib/ui-lang";
@@ -204,7 +204,7 @@ export function Home() {
           <div className="landing-nav-actions">
             <LangToggle className="btn btn-ghost site-lang" />
             {me ? (
-              <Link className="btn btn-gold" to="/admin">
+              <Link className="btn btn-gold" to={homeFor(me)}>
                 {t.toPanel} <ArrowRight size={16} />
               </Link>
             ) : (
@@ -231,7 +231,7 @@ export function Home() {
             <Ornament className="hero-ornament" width={150} />
             <p className="hero-sub">{t.sub}</p>
             <div className="hero-cta">
-              <Link className="btn btn-gold btn-lg" to={me ? "/admin" : "/register"}>
+              <Link className="btn btn-gold btn-lg" to={me ? homeFor(me) : "/register"}>
                 {me ? t.toPanel : t.ctaPrimary} <ArrowRight size={18} />
               </Link>
               <Link className="btn btn-outline-light btn-lg" to={`/menu/demo-restoran?lang=${lang}`}>
@@ -325,7 +325,7 @@ export function Home() {
           <h2 className="display">{t.ctaTitle}</h2>
           <p>{t.ctaText}</p>
         </div>
-        <Link className="btn btn-lg cta-btn" to={me ? "/admin" : "/register"}>
+        <Link className="btn btn-lg cta-btn" to={me ? homeFor(me) : "/register"}>
           {me ? t.toPanel : t.ctaButton} <ArrowRight size={18} />
         </Link>
       </section>

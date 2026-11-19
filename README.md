@@ -55,6 +55,19 @@ Renkler, yazı tipleri ve gölgeler [client/src/styles/tokens.css](client/src/st
 
 Notlar: Windows ilk çalıştırmada Node.js için güvenlik duvarı izni sorar; izin vermezseniz telefon bağlanamaz. Android'in tam PWA kurulumu (çevrimdışı çalışma) HTTPS ister; yerel ağda http ile ana ekrana kısayol eklenir. Canlıda `CLIENT_URL`'i gerçek HTTPS alan adınız yapın.
 
+## Süper admin
+
+Tüm restoranları görmek ve yönetmek için `/super` paneli vardır: istatistikler, restoran listesi ve arama, menüyü açma, restoranın paneline şifresiz girme ("Open dashboard", 2 saatlik oturum), yayından kaldırma/yayına alma ve silme.
+
+Güvenlik nedeniyle süper admin hesabı kayıt formundan açılamaz, sunucuda şu komutla oluşturulur:
+
+```bash
+npm run superadmin -w server -- admin@ornek.com            # rastgele şifre üretir ve gösterir
+npm run superadmin -w server -- admin@ornek.com "uzun-sifre" # şifreyi siz belirleyin (en az 10 karakter)
+```
+
+Mevcut bir hesabın e-postası verilirse o hesap süper admin yapılır. Yetki her istekte veritabanından kontrol edilir.
+
 ## Demo veri
 
 `npm run db:seed -w server` "Lokma Mutfak" demo restoranını 6 kategori, 21 ürün ve 3 dille (TR/EN/DE) yeniden oluşturur. Fotoğraflar `server/prisma/seed-images/` klasöründedir ve Wikimedia Commons'tan serbest lisanslarla alınmıştır; yazar ve lisanslar [CREDITS.md](server/prisma/seed-images/CREDITS.md) dosyasında ve uygulamadaki `/kaynaklar` sayfasındadır.

@@ -1,6 +1,32 @@
 import { translateServerError } from "./ui-lang";
 
 const TOKEN_KEY = "rm_token";
+/** Süper admin bir restoranın paneline girdiğinde kendi token'ı burada bekler */
+const SUPER_TOKEN_KEY = "rm_super_token";
+
+export const superTokenStore = {
+  get(): string | null {
+    try {
+      return sessionStorage.getItem(SUPER_TOKEN_KEY);
+    } catch {
+      return null;
+    }
+  },
+  set(token: string) {
+    try {
+      sessionStorage.setItem(SUPER_TOKEN_KEY, token);
+    } catch {
+      /* yok say */
+    }
+  },
+  clear() {
+    try {
+      sessionStorage.removeItem(SUPER_TOKEN_KEY);
+    } catch {
+      /* yok say */
+    }
+  },
+};
 
 export const tokenStore = {
   get(): string | null {

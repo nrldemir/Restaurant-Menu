@@ -244,6 +244,57 @@ const en = {
     text: "The food photos in the demo menu and on this site come from Wikimedia Commons and are used under the free licenses listed below. Images have been resized.",
     home: "Home",
   },
+  super: {
+    badge: "Super admin",
+    title: "Restaurants",
+    subtitle: "Every restaurant on EasyDine at a glance.",
+    statRestaurants: "Restaurants",
+    statActive: "Live",
+    statNew: "New this week",
+    statCategories: "Categories",
+    statItems: "Items",
+    statOwners: "Owners",
+    search: "Search by name, link or email",
+    colRestaurant: "Restaurant",
+    colOwner: "Owner",
+    colMenu: "Menu",
+    colLanguages: "Languages",
+    colCreated: "Created",
+    colStatus: "Status",
+    live: "Live",
+    suspended: "Offline",
+    counts: (c: number, p: number) => `${c} ${c === 1 ? "category" : "categories"} · ${p} ${p === 1 ? "item" : "items"}`,
+    noOwner: "No owner",
+    openMenu: "Open menu",
+    manage: "Open dashboard",
+    suspend: "Take offline",
+    activate: "Put online",
+    remove: "Delete",
+    suspendTitle: "Take this menu offline?",
+    suspendMsg: (name: string): ReactNode => (
+      <>
+        <b>{name}</b>'s menu and QR codes will stop working until you put it back online. The owner can still log in.
+      </>
+    ),
+    deleteTitle: "Delete restaurant?",
+    deleteMsg: (name: string, owners: string): ReactNode => (
+      <>
+        <b>{name}</b>, its whole menu, its photos and the owner account{owners ? <> (<b>{owners}</b>)</> : null} will be
+        permanently deleted. This can't be undone.
+      </>
+    ),
+    toastSuspended: (name: string) => `"${name}" is now offline`,
+    toastActivated: (name: string) => `"${name}" is live again`,
+    toastDeleted: (name: string) => `"${name}" was deleted`,
+    empty: "No restaurants yet",
+    emptyText: "Restaurants appear here as soon as someone signs up.",
+    emptySearch: "No restaurants match your search.",
+    impersonatingAs: (name: string) => `You're viewing ${name}'s dashboard as super admin.`,
+    backToSuper: "Back to super admin",
+    suspendedNotice:
+      "Your menu is currently offline: guests can't open it and QR codes won't work. Please contact EasyDine support.",
+    pageTitle: "EasyDine · Super admin",
+  },
 };
 
 type Dict = typeof en;
@@ -484,6 +535,58 @@ const tr: Dict = {
     text: "Demo menüdeki ve bu sitedeki yemek fotoğrafları Wikimedia Commons'tan alınmıştır ve aşağıdaki serbest lisanslarla kullanılmaktadır. Görseller yeniden boyutlandırılmıştır.",
     home: "Ana sayfa",
   },
+  super: {
+    badge: "Süper admin",
+    title: "Restoranlar",
+    subtitle: "EasyDine'daki tüm restoranlar tek bakışta.",
+    statRestaurants: "Restoran",
+    statActive: "Yayında",
+    statNew: "Bu hafta yeni",
+    statCategories: "Kategori",
+    statItems: "Ürün",
+    statOwners: "Restoran sahibi",
+    search: "Ada, linke veya e-postaya göre ara",
+    colRestaurant: "Restoran",
+    colOwner: "Sahibi",
+    colMenu: "Menü",
+    colLanguages: "Diller",
+    colCreated: "Kayıt",
+    colStatus: "Durum",
+    live: "Yayında",
+    suspended: "Yayında değil",
+    counts: (c: number, p: number) => `${c} kategori · ${p} ürün`,
+    noOwner: "Sahibi yok",
+    openMenu: "Menüyü aç",
+    manage: "Paneline gir",
+    suspend: "Yayından kaldır",
+    activate: "Yayına al",
+    remove: "Sil",
+    suspendTitle: "Menü yayından kaldırılsın mı?",
+    suspendMsg: (name: string): ReactNode => (
+      <>
+        <b>{name}</b> menüsü ve QR kodları, tekrar yayına alınana kadar çalışmaz. Restoran sahibi panele girmeye devam
+        edebilir.
+      </>
+    ),
+    deleteTitle: "Restoran silinsin mi?",
+    deleteMsg: (name: string, owners: string): ReactNode => (
+      <>
+        <b>{name}</b>, tüm menüsü, fotoğrafları ve sahip hesabı{owners ? <> (<b>{owners}</b>)</> : null} kalıcı olarak
+        silinecek. Bu işlem geri alınamaz.
+      </>
+    ),
+    toastSuspended: (name: string) => `"${name}" yayından kaldırıldı`,
+    toastActivated: (name: string) => `"${name}" tekrar yayında`,
+    toastDeleted: (name: string) => `"${name}" silindi`,
+    empty: "Henüz restoran yok",
+    emptyText: "Biri kayıt olur olmaz restoranı burada görünür.",
+    emptySearch: "Aramanızla eşleşen restoran yok.",
+    impersonatingAs: (name: string) => `${name} panelini süper admin olarak görüntülüyorsunuz.`,
+    backToSuper: "Süper admin'e dön",
+    suspendedNotice:
+      "Menünüz şu an yayında değil: müşteriler açamıyor ve QR kodlar çalışmıyor. Lütfen EasyDine destek ile iletişime geçin.",
+    pageTitle: "EasyDine · Süper admin",
+  },
 };
 
 const DICTS: Record<UiLang, Dict> = { en, tr };
@@ -520,6 +623,9 @@ const SERVER_ERRORS_EN: Record<string, string> = {
   "En az bir dil seçin": "Choose at least one language",
   "Telefon sadece rakam, boşluk ve + ( ) - içerebilir": "Phone may only contain digits, spaces and + ( ) -",
   "Bulunamadı": "Not found",
+  "Bu işlem için bir restoran hesabı gerekiyor": "This action requires a restaurant account",
+  "Bu işlem için yetkiniz yok": "You don't have permission to do this",
+  "Bu restoranın bir kullanıcısı yok": "This restaurant has no user account",
   "Bir hata oluştu": "Something went wrong",
 };
 

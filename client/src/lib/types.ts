@@ -17,6 +17,7 @@ export interface Restaurant {
   currency: string;
   languages: string[];
   defaultLanguage: string;
+  isActive: boolean;
   menuUrl: string;
 }
 
@@ -40,11 +41,40 @@ export interface Product {
 }
 
 export interface PublicMenu {
-  restaurant: Omit<Restaurant, "id" | "menuUrl">;
+  restaurant: Omit<Restaurant, "id" | "menuUrl" | "isActive">;
   categories: (Category & { products: Product[] })[];
 }
 
 export interface Me {
-  user: { id: string; email: string };
-  restaurant: Restaurant;
+  user: { id: string; email: string; role: "owner" | "superadmin" };
+  /** Süper adminin bağlı bir restoranı olmayabilir */
+  restaurant: Restaurant | null;
+  /** Süper admin bir restoranın paneline girmişse true */
+  impersonating: boolean;
+}
+
+export interface SuperStats {
+  restaurants: number;
+  active: number;
+  newThisWeek: number;
+  categories: number;
+  products: number;
+  owners: number;
+}
+
+export interface SuperRestaurant {
+  id: string;
+  name: string;
+  slug: string;
+  logoUrl: string | null;
+  theme: string;
+  isActive: boolean;
+  languages: string[];
+  currency: string;
+  owners: string[];
+  categoryCount: number;
+  productCount: number;
+  createdAt: string;
+  updatedAt: string;
+  menuUrl: string;
 }

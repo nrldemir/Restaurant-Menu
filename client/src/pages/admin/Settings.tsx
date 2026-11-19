@@ -127,7 +127,7 @@ export function Settings() {
   const toast = useToast();
   const { t } = useUi();
   const ts = t.settings;
-  const r = me!.restaurant;
+  const r = me!.restaurant!;
   const [saved, setSaved] = useState<Form>(() => toForm(r));
   const [form, setForm] = useState<Form>(saved);
   const [error, setError] = useState<string | null>(null);

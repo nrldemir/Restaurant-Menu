@@ -8,8 +8,8 @@ export const publicRouter = Router();
 
 /** Müşterilerin gördüğü menü: aktif kategoriler ve ürünleri, tüm dillerdeki çevirileriyle. */
 publicRouter.get("/restaurants/:slug/menu", async (req, res) => {
-  const restaurant = await prisma.restaurant.findUnique({
-    where: { slug: req.params.slug },
+  const restaurant = await prisma.restaurant.findFirst({
+    where: { slug: req.params.slug, isActive: true },
     include: {
       categories: {
         where: { isActive: true },
@@ -23,7 +23,7 @@ publicRouter.get("/restaurants/:slug/menu", async (req, res) => {
   });
   if (!restaurant) throw new HttpError(404, "Restoran bulunamadı");
 
-  const { id: _id, menuUrl: _url, ...info } = serializeRestaurant(restaurant);
+  const { id: _id, menuUrl: _url, isActive: _active, ...info } = serializeRestaurant(restaurant);
   res.json({
     restaurant: info,
     categories: restaurant.categories
@@ -45,7 +45,7 @@ const THEME_COLORS: Record<string, string> = {
 
 /** Müşteri menüyü telefonunun ana ekranına eklediğinde restoranın adı ve rengiyle açılsın. */
 publicRouter.get("/restaurants/:slug/manifest.webmanifest", async (req, res) => {
-  const r = await prisma.restaurant.findUnique({ where: { slug: req.params.slug } });
+  const r = await prisma.restaurant.findFirst({ where: { slug: req.params.slug, isActive: true } });
   if (!r) throw new HttpError(404, "Restoran bulunamadı");
 
   const icons = r.logoUrl
@@ -79,8 +79,8 @@ publicRouter.get("/restaurants/:slug/manifest.webmanifest", async (req, res) => 
  * ?download=1   -> dosya olarak indir
  */
 publicRouter.get("/restaurants/:slug/qr", async (req, res) => {
-  const restaurant = await prisma.restaurant.findUnique({
-    where: { slug: req.params.slug },
+  const restaurant = await prisma.restaurant.findFirst({
+    where: { slug: req.params.slug, isActive: true },
     select: { slug: true },
   });
   if (!restaurant) throw new HttpError(404, "Restoran bulunamadı");

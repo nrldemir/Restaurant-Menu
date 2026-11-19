@@ -42,7 +42,7 @@ function Stat({ icon: Icon, label, value, tone }: { icon: typeof Layers; label: 
 
 export function MenuEditor() {
   const { me } = useAuth();
-  const restaurant = me!.restaurant;
+  const restaurant = me!.restaurant!;
   const lang = restaurant.defaultLanguage;
   const toast = useToast();
   const confirm = useConfirm();

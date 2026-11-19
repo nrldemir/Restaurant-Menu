@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../lib/prisma";
 import { HttpError } from "../lib/http";
 import { loginSchema, registerSchema } from "../lib/schemas";
-import { getAuth, requireAuth, signToken } from "../middleware/auth";
+import { getSession, requireAuth, signToken } from "../middleware/auth";
 import { serializeRestaurant } from "./serializers";
 
 export const authRouter = Router();
@@ -26,7 +26,7 @@ authRouter.post("/register", async (req, res) => {
     },
   });
 
-  res.status(201).json({ token: signToken({ userId: user.id, restaurantId: user.restaurantId }) });
+  res.status(201).json({ token: signToken({ userId: user.id, restaurantId: user.restaurantId, role: "owner" }) });
 });
 
 authRouter.post("/login", async (req, res) => {
@@ -37,16 +37,18 @@ authRouter.post("/login", async (req, res) => {
     throw new HttpError(401, "E-posta veya şifre hatalı");
   }
 
-  res.json({ token: signToken({ userId: user.id, restaurantId: user.restaurantId }) });
+  const role = user.role === "superadmin" ? "superadmin" : "owner";
+  res.json({ token: signToken({ userId: user.id, restaurantId: user.restaurantId, role }) });
 });
 
 authRouter.get("/me", requireAuth, async (req, res) => {
-  const { userId } = getAuth(req);
-  const user = await prisma.user.findUnique({ where: { id: userId }, include: { restaurant: true } });
+  const session = getSession(req);
+  const user = await prisma.user.findUnique({ where: { id: session.userId }, include: { restaurant: true } });
   if (!user) throw new HttpError(401, "Kullanıcı bulunamadı");
 
   res.json({
-    user: { id: user.id, email: user.email },
-    restaurant: serializeRestaurant(user.restaurant),
+    user: { id: user.id, email: user.email, role: user.role === "superadmin" ? "superadmin" : "owner" },
+    restaurant: user.restaurant ? serializeRestaurant(user.restaurant) : null,
+    impersonating: Boolean(session.impersonatedBy),
   });
 });

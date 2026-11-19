@@ -8,12 +8,14 @@ datasource db {
 }
 
 model User {
-  id           String     @id @default(cuid())
-  email        String     @unique
+  id           String      @id @default(cuid())
+  email        String      @unique
   passwordHash String
-  restaurantId String
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  createdAt    DateTime   @default(now())
+  /// "owner": restoran sahibi, "superadmin": tüm restoranları yönetir (restoranı olmayabilir)
+  role         String      @default("owner")
+  restaurantId String?
+  restaurant   Restaurant? @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  createdAt    DateTime    @default(now())
 }
 
 model Restaurant {
@@ -32,6 +34,8 @@ model Restaurant {
   /// Virgülle ayrılmış dil kodları, örn. "tr,en"
   languages       String     @default("tr")
   defaultLanguage String     @default("tr")
+  /// false ise süper admin menüyü yayından kaldırmıştır
+  isActive        Boolean    @default(true)
   users           User[]
   categories      Category[]
   products        Product[]

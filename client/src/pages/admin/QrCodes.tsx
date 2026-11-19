@@ -68,7 +68,7 @@ export function QrCodes() {
   const toast = useToast();
   const { t } = useUi();
   const tq = t.qr;
-  const restaurant = me!.restaurant;
+  const restaurant = me!.restaurant!;
   const [count, setCount] = useState(8);
   const [printMode, setPrintMode] = useState<"tables" | "general">("tables");
   const safeCount = Math.min(Math.max(count, 1), MAX_TABLES);

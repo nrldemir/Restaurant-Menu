@@ -1,13 +1,14 @@
 import { useEffect } from "react";
-import { NavLink, Outlet } from "react-router-dom";
-import { ExternalLink, LogOut, QrCode, Settings, UtensilsCrossed } from "lucide-react";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { ArrowLeft, EyeOff, ExternalLink, LogOut, QrCode, Settings, ShieldCheck, UtensilsCrossed } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
 import { Logo, LogoMark } from "../../components/Logo";
 import { LangToggle } from "../../components/LangToggle";
 import { useUi } from "../../lib/ui-lang";
 
 export function AdminLayout() {
-  const { me, logout } = useAuth();
+  const { me, logout, stopImpersonating } = useAuth();
+  const navigate = useNavigate();
   const { t, lang } = useUi();
 
   useEffect(() => {
@@ -15,9 +16,14 @@ export function AdminLayout() {
     document.title = t.nav.adminTitle;
   }, [lang, t]);
 
-  if (!me) return null;
-  const { restaurant } = me;
+  if (!me?.restaurant) return null;
+  const restaurant = me.restaurant;
   const menuPath = `/menu/${restaurant.slug}`;
+
+  async function backToSuper() {
+    await stopImpersonating();
+    navigate("/super");
+  }
   const nav = [
     { to: "/admin", end: true, icon: UtensilsCrossed, label: t.nav.menu },
     { to: "/admin/settings", icon: Settings, label: t.nav.settings },
@@ -65,8 +71,13 @@ export function AdminLayout() {
           <div className="sidebar-user">
             <span title={me.user.email}>{me.user.email}</span>
             <LangToggle className="btn btn-ghost btn-sm" />
-            <button className="icon-btn" onClick={logout} aria-label={t.nav.logout} title={t.nav.logout}>
-              <LogOut size={17} />
+            <button
+              className="icon-btn"
+              onClick={me.impersonating ? backToSuper : logout}
+              aria-label={me.impersonating ? t.super.backToSuper : t.nav.logout}
+              title={me.impersonating ? t.super.backToSuper : t.nav.logout}
+            >
+              {me.impersonating ? <ArrowLeft size={17} /> : <LogOut size={17} />}
             </button>
           </div>
         </div>
@@ -79,12 +90,31 @@ export function AdminLayout() {
         <a className="icon-btn" href={menuPath} target="_blank" rel="noreferrer" aria-label={t.nav.viewMenu}>
           <ExternalLink size={18} />
         </a>
-        <button className="icon-btn" onClick={logout} aria-label={t.nav.logout}>
-          <LogOut size={18} />
+        <button
+          className="icon-btn"
+          onClick={me.impersonating ? backToSuper : logout}
+          aria-label={me.impersonating ? t.super.backToSuper : t.nav.logout}
+        >
+          {me.impersonating ? <ArrowLeft size={18} /> : <LogOut size={18} />}
         </button>
       </header>
 
       <main className="admin-main">
+        {me.impersonating && (
+          <div className="admin-banner banner-super">
+            <ShieldCheck size={18} />
+            <span>{t.super.impersonatingAs(restaurant.name)}</span>
+            <button className="btn btn-sm" onClick={backToSuper}>
+              <ArrowLeft size={15} /> {t.super.backToSuper}
+            </button>
+          </div>
+        )}
+        {!restaurant.isActive && (
+          <div className="admin-banner banner-warn">
+            <EyeOff size={18} />
+            <span>{t.super.suspendedNotice}</span>
+          </div>
+        )}
         <Outlet />
       </main>
 

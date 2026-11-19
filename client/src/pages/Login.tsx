@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { CircleAlert, Eye, EyeOff, LoaderCircle, Lock, Mail, Sparkles } from "lucide-react";
-import { useAuth } from "../auth/AuthContext";
+import { homeFor, useAuth } from "../auth/AuthContext";
 import { errorMessage } from "../lib/api";
 import { useUi } from "../lib/ui-lang";
 import { AuthLayout } from "./AuthLayout";
@@ -10,22 +10,22 @@ export function Login() {
   const { me, login } = useAuth();
   const { t } = useUi();
   const navigate = useNavigate();
-  const from = (useLocation().state as { from?: string } | null)?.from ?? "/admin";
+  const from = (useLocation().state as { from?: string } | null)?.from;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  if (me) return <Navigate to={from} replace />;
+  if (me) return <Navigate to={from ?? homeFor(me)} replace />;
 
   async function submit(e?: FormEvent, creds = { email, password }) {
     e?.preventDefault();
     setError(null);
     setBusy(true);
     try {
-      await login(creds.email, creds.password);
-      navigate(from, { replace: true });
+      const user = await login(creds.email, creds.password);
+      navigate(from ?? homeFor(user), { replace: true });
     } catch (err) {
       setError(errorMessage(err));
       setBusy(false);

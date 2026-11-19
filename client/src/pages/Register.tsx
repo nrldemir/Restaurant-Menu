@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { CircleAlert, Eye, EyeOff, LoaderCircle, Lock, Mail, Store } from "lucide-react";
-import { useAuth } from "../auth/AuthContext";
+import { homeFor, useAuth } from "../auth/AuthContext";
 import { errorMessage } from "../lib/api";
 import { sanitizeSlugInput, slugify } from "../lib/slug";
 import { useUi } from "../lib/ui-lang";
@@ -26,7 +26,7 @@ export function Register() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  if (me) return <Navigate to="/admin" replace />;
+  if (me) return <Navigate to={homeFor(me)} replace />;
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();

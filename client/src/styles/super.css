@@ -1,0 +1,259 @@
+/* ---------- Süper admin ---------- */
+
+.super {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+.super-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: calc(12px + env(safe-area-inset-top)) 24px 12px;
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+.super-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.super-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: var(--radius-full);
+  background: var(--gold-gradient);
+  color: var(--bordo-950);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.super-user {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.super-email {
+  font-size: 13px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 220px;
+}
+.super-main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+.super-stats {
+  grid-template-columns: repeat(6, 1fr);
+}
+@media (max-width: 1100px) {
+  .super-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.super-list {
+  padding: 16px;
+}
+.super-toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.super-search {
+  flex: 1;
+  max-width: 420px;
+}
+
+.super-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.super-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.5fr) minmax(150px, 1.2fr) minmax(120px, 1fr) minmax(90px, 0.8fr) 104px 104px 272px;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 13.5px;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+.super-row:not(.super-head):hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+}
+.super-row.is-off {
+  background: var(--surface-2);
+}
+.super-head {
+  border: 0;
+  background: transparent;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.super-cell-name {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.super-cell-name > span:last-child {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.super-cell-name strong {
+  font-size: 14.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.super-cell-name small {
+  color: var(--muted);
+  font-size: 12px;
+}
+.super-row.is-off .super-cell-name strong {
+  opacity: 0.6;
+}
+.super-avatar {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  overflow: hidden;
+  color: #fff;
+  font-weight: 800;
+  font-size: 18px;
+}
+.super-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #fff;
+}
+.super-cell {
+  min-width: 0;
+  color: var(--text-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.super-langs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.super-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+@media (max-width: 1000px) {
+  .super-head {
+    display: none;
+  }
+  .super-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+    padding: 14px;
+  }
+  .super-cell-name {
+    grid-column: 1 / -1;
+  }
+  .super-cell::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+  .super-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+}
+@media (max-width: 640px) {
+  .super-topbar {
+    padding-left: 16px;
+    padding-right: 12px;
+  }
+  .super-topbar .logo-text,
+  .super-email {
+    display: none;
+  }
+  .super-main {
+    padding: 20px 16px 48px;
+  }
+  .super-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .super-list {
+    padding: 12px;
+  }
+}
+
+/* ---------- Panel uyarı şeritleri ---------- */
+
+.admin-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+}
+.admin-banner span {
+  flex: 1;
+  min-width: 200px;
+}
+.banner-super {
+  background: var(--bordo-900);
+  color: #fbf5e6;
+}
+.banner-super svg {
+  color: var(--altin-300);
+}
+.banner-super .btn {
+  background: var(--gold-gradient);
+  border: 0;
+  color: var(--bordo-950);
+}
+.banner-warn {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
