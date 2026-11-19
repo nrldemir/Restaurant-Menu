@@ -15,8 +15,9 @@ const UPLOAD_DIR = path.resolve(__dirname, "../uploads");
 type T = Record<"tr" | "en" | "de", [string, string?]>;
 type Item = { t: T; price: number; image?: string; available?: boolean };
 
-const MENU: { category: T; items: Item[] }[] = [
+const MENU: { category: T; image?: string; items: Item[] }[] = [
   {
+    image: "serpme",
     category: {
       tr: ["Kahvaltı", "Her gün 08:00 – 13:00 arası"],
       en: ["Breakfast", "Served daily 8 am – 1 pm"],
@@ -62,6 +63,7 @@ const MENU: { category: T; items: Item[] }[] = [
     ],
   },
   {
+    image: "mercimek",
     category: {
       tr: ["Çorba & Mezeler"],
       en: ["Soups & Starters"],
@@ -107,6 +109,7 @@ const MENU: { category: T; items: Item[] }[] = [
     ],
   },
   {
+    image: "adana",
     category: {
       tr: ["Izgaralar", "Tüm etlerimiz odun kömüründe pişer"],
       en: ["From the Grill", "All our meats are cooked over charcoal"],
@@ -152,6 +155,7 @@ const MENU: { category: T; items: Item[] }[] = [
     ],
   },
   {
+    image: "lahmacun",
     category: {
       tr: ["Pide & Lahmacun", "Odun ateşinde, taş fırında"],
       en: ["Pide & Lahmacun", "Baked in our wood-fired oven"],
@@ -179,6 +183,7 @@ const MENU: { category: T; items: Item[] }[] = [
     ],
   },
   {
+    image: "kunefe",
     category: {
       tr: ["Tatlılar"],
       en: ["Desserts"],
@@ -216,6 +221,7 @@ const MENU: { category: T; items: Item[] }[] = [
     ],
   },
   {
+    image: "cay",
     category: {
       tr: ["İçecekler"],
       en: ["Drinks"],
@@ -289,10 +295,15 @@ async function main() {
   // Önceki demo verisini ve görsellerini temizle
   const old = await prisma.restaurant.findUnique({
     where: { slug: SLUG },
-    include: { products: { select: { imageUrl: true } } },
+    include: { products: { select: { imageUrl: true } }, categories: { select: { imageUrl: true } } },
   });
   if (old) {
-    [old.logoUrl, old.coverUrl, ...old.products.map((p) => p.imageUrl)].forEach(removeUpload);
+    [
+      old.logoUrl,
+      old.coverUrl,
+      ...old.products.map((p) => p.imageUrl),
+      ...old.categories.map((c) => c.imageUrl),
+    ].forEach(removeUpload);
     await prisma.restaurant.delete({ where: { id: old.id } });
   }
   await prisma.user.deleteMany({ where: { email: EMAIL } });
@@ -303,6 +314,8 @@ async function main() {
       name: "Lokma Mutfak",
       description: "Odun ateşinde geleneksel Anadolu lezzetleri",
       coverUrl: copyImage("cover"),
+      phone: "0212 000 00 00",
+      openingHours: "09:00 – 24:00",
       theme: "bordo",
       currency: "TRY",
       languages: "tr,en,de",
@@ -317,6 +330,7 @@ async function main() {
       data: {
         restaurantId: restaurant.id,
         sortOrder: ci,
+        imageUrl: section.image ? copyImage(section.image) : null,
         translations: { create: rows(section.category) },
         products: {
           create: section.items.map((item, pi) => ({

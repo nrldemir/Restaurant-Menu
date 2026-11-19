@@ -32,6 +32,8 @@ restaurantRouter.put("/", async (req, res) => {
       description: data.description || null,
       logoUrl: data.logoUrl === undefined ? current.logoUrl : data.logoUrl,
       coverUrl: data.coverUrl === undefined ? current.coverUrl : data.coverUrl,
+      phone: data.phone === undefined ? current.phone : data.phone || null,
+      openingHours: data.openingHours === undefined ? current.openingHours : data.openingHours || null,
       theme: data.theme ?? current.theme,
       currency: data.currency,
       languages: data.languages.join(","),

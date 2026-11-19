@@ -23,6 +23,9 @@ model Restaurant {
   description     String?
   logoUrl         String?
   coverUrl        String?
+  phone           String?
+  /// Serbest metin, örn. "09:00 – 24:00"
+  openingHours    String?
   /// Menü renk teması: bordo, lacivert, nar, safran, zeytin, ege, murdum, antrasit
   theme           String     @default("bordo")
   currency        String     @default("TRY")
@@ -42,6 +45,7 @@ model Category {
   restaurant   Restaurant            @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   sortOrder    Int                   @default(0)
   isActive     Boolean               @default(true)
+  imageUrl     String?
   translations CategoryTranslation[]
   products     Product[]
   createdAt    DateTime              @default(now())

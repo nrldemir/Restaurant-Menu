@@ -37,6 +37,7 @@ interface CategoryFormProps {
 export function CategoryForm({ restaurant, initial, onSaved, onClose }: CategoryFormProps) {
   const [translations, setTranslations] = useState<TranslationMap>(initial?.translations ?? {});
   const [isActive, setIsActive] = useState(initial?.isActive ?? true);
+  const [imageUrl, setImageUrl] = useState<string | null>(initial?.imageUrl ?? null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -45,7 +46,7 @@ export function CategoryForm({ restaurant, initial, onSaved, onClose }: Category
     setBusy(true);
     setError(null);
     try {
-      const body = { translations, isActive };
+      const body = { translations, isActive, imageUrl };
       const saved = initial
         ? await api<Category>(`/admin/categories/${initial.id}`, { method: "PUT", body })
         : await api<Category>("/admin/categories", { method: "POST", body });
@@ -72,6 +73,12 @@ export function CategoryForm({ restaurant, initial, onSaved, onClose }: Category
             withDescription
             namePlaceholder="Örn. Ana Yemekler"
             descriptionPlaceholder="İsteğe bağlı: Tüm yemeklerimiz odun ateşinde pişer."
+          />
+          <ImageInput
+            value={imageUrl}
+            onChange={setImageUrl}
+            label="Kategori görseli"
+            hint="Menünün üstündeki kategori şeridinde görünür. Boş bırakılırsa ilk ürünün fotoğrafı kullanılır."
           />
           <div className="toggle-row">
             <div>

@@ -35,6 +35,7 @@ categoriesRouter.post("/", async (req, res) => {
     data: {
       restaurantId,
       isActive: data.isActive ?? true,
+      imageUrl: data.imageUrl ?? null,
       sortOrder: (last?.sortOrder ?? -1) + 1,
       translations: { create: cleanTranslations(data.translations, restaurant) },
     },
@@ -59,29 +60,31 @@ categoriesRouter.put("/reorder", async (req, res) => {
 categoriesRouter.put("/:id", async (req, res) => {
   const { restaurantId } = getAuth(req);
   const data = categorySchema.parse(req.body);
-  await findOwnedCategory(req.params.id, restaurantId);
+  const current = await findOwnedCategory(req.params.id, restaurantId);
   const restaurant = await prisma.restaurant.findUniqueOrThrow({ where: { id: restaurantId } });
 
   const category = await prisma.category.update({
     where: { id: req.params.id },
     data: {
       isActive: data.isActive,
+      imageUrl: data.imageUrl === undefined ? current.imageUrl : data.imageUrl,
       translations: { deleteMany: {}, create: cleanTranslations(data.translations, restaurant) },
     },
     include: { translations: true, _count: { select: { products: true } } },
   });
+  if (current.imageUrl && current.imageUrl !== category.imageUrl) await deleteUpload(current.imageUrl);
   res.json({ ...serializeCategory(category), productCount: category._count.products });
 });
 
 categoriesRouter.delete("/:id", async (req, res) => {
   const { restaurantId } = getAuth(req);
-  await findOwnedCategory(req.params.id, restaurantId);
+  const category = await findOwnedCategory(req.params.id, restaurantId);
 
   const products = await prisma.product.findMany({
     where: { categoryId: req.params.id },
     select: { imageUrl: true },
   });
   await prisma.category.delete({ where: { id: req.params.id } });
-  await Promise.all(products.map((p) => deleteUpload(p.imageUrl)));
+  await Promise.all([category.imageUrl, ...products.map((p) => p.imageUrl)].map(deleteUpload));
   res.status(204).end();
 });

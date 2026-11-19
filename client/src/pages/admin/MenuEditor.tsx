@@ -89,6 +89,9 @@ export function MenuEditor() {
     .filter((p) => p.categoryId === selectedId)
     .sort((a, b) => a.sortOrder - b.sortOrder);
   const countIn = (id: string) => products.filter((p) => p.categoryId === id).length;
+  /** Kategori görseli yoksa menüdeki gibi ilk ürün fotoğrafı */
+  const catImage = (c: Category) =>
+    c.imageUrl ?? products.find((p) => p.categoryId === c.id && p.imageUrl)?.imageUrl ?? null;
   const soldOut = products.filter((p) => !p.isAvailable).length;
 
   function reorderCategories(next: Category[]) {
@@ -106,7 +109,11 @@ export function MenuEditor() {
     const isActive = !c.isActive;
     setCategories((list) => list.map((x) => (x.id === c.id ? { ...x, isActive } : x)));
     run(
-      () => api(`/admin/categories/${c.id}`, { method: "PUT", body: { translations: c.translations, isActive } }),
+      () =>
+        api(`/admin/categories/${c.id}`, {
+          method: "PUT",
+          body: { translations: c.translations, isActive, imageUrl: c.imageUrl },
+        }),
       isActive ? `"${name(c)}" menüde gösteriliyor` : `"${name(c)}" menüden gizlendi`,
     );
   }
@@ -253,6 +260,9 @@ export function MenuEditor() {
                   className={`cat-item${c.id === selectedId ? " selected" : ""}${c.isActive ? "" : " hidden-cat"}`}
                 >
                   <DragHandle handle={handle} />
+                  <span className="cat-thumb">
+                    {catImage(c) ? <img src={catImage(c)!} alt="" /> : <UtensilsCrossed size={15} />}
+                  </span>
                   <button className="cat-main" onClick={() => setSelectedId(c.id)}>
                     <span className="cat-name">{name(c)}</span>
                     <span className="cat-meta">

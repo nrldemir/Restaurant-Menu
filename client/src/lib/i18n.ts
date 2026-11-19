@@ -15,14 +15,14 @@ export const CURRENCIES = ["TRY", "USD", "EUR", "GBP"];
 
 /** Müşteri menüsündeki sabit metinler. */
 const UI = {
-  tr: { search: "Menüde ara", soldOut: "Tükendi", table: "Masa", noResults: "Sonuç bulunamadı", notFound: "Menü bulunamadı", language: "Dil" },
-  en: { search: "Search the menu", soldOut: "Sold out", table: "Table", noResults: "No results", notFound: "Menu not found", language: "Language" },
-  de: { search: "Menü durchsuchen", soldOut: "Ausverkauft", table: "Tisch", noResults: "Keine Ergebnisse", notFound: "Menü nicht gefunden", language: "Sprache" },
-  fr: { search: "Rechercher", soldOut: "Épuisé", table: "Table", noResults: "Aucun résultat", notFound: "Menu introuvable", language: "Langue" },
-  es: { search: "Buscar en el menú", soldOut: "Agotado", table: "Mesa", noResults: "Sin resultados", notFound: "Menú no encontrado", language: "Idioma" },
-  it: { search: "Cerca nel menu", soldOut: "Esaurito", table: "Tavolo", noResults: "Nessun risultato", notFound: "Menu non trovato", language: "Lingua" },
-  ru: { search: "Поиск по меню", soldOut: "Нет в наличии", table: "Стол", noResults: "Ничего не найдено", notFound: "Меню не найдено", language: "Язык" },
-  ar: { search: "ابحث في القائمة", soldOut: "نفد", table: "طاولة", noResults: "لا توجد نتائج", notFound: "القائمة غير موجودة", language: "اللغة" },
+  tr: { search: "Menüde ara", soldOut: "Tükendi", table: "Masa", noResults: "Sonuç bulunamadı", notFound: "Menü bulunamadı", language: "Dil", categories: "Kategoriler", dark: "Koyu tema", light: "Açık tema" },
+  en: { search: "Search the menu", soldOut: "Sold out", table: "Table", noResults: "No results", notFound: "Menu not found", language: "Language", categories: "Categories", dark: "Dark theme", light: "Light theme" },
+  de: { search: "Menü durchsuchen", soldOut: "Ausverkauft", table: "Tisch", noResults: "Keine Ergebnisse", notFound: "Menü nicht gefunden", language: "Sprache", categories: "Kategorien", dark: "Dunkles Design", light: "Helles Design" },
+  fr: { search: "Rechercher", soldOut: "Épuisé", table: "Table", noResults: "Aucun résultat", notFound: "Menu introuvable", language: "Langue", categories: "Catégories", dark: "Thème sombre", light: "Thème clair" },
+  es: { search: "Buscar en el menú", soldOut: "Agotado", table: "Mesa", noResults: "Sin resultados", notFound: "Menú no encontrado", language: "Idioma", categories: "Categorías", dark: "Tema oscuro", light: "Tema claro" },
+  it: { search: "Cerca nel menu", soldOut: "Esaurito", table: "Tavolo", noResults: "Nessun risultato", notFound: "Menu non trovato", language: "Lingua", categories: "Categorie", dark: "Tema scuro", light: "Tema chiaro" },
+  ru: { search: "Поиск по меню", soldOut: "Нет в наличии", table: "Стол", noResults: "Ничего не найдено", notFound: "Меню не найдено", language: "Язык", categories: "Категории", dark: "Тёмная тема", light: "Светлая тема" },
+  ar: { search: "ابحث في القائمة", soldOut: "نفد", table: "طاولة", noResults: "لا توجد نتائج", notFound: "القائمة غير موجودة", language: "اللغة", categories: "الفئات", dark: "الوضع الداكن", light: "الوضع الفاتح" },
 } as const;
 
 export function uiText(lang: string) {

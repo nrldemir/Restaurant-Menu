@@ -30,6 +30,14 @@ export const restaurantUpdateSchema = z
     description: z.string().trim().max(500).nullable().optional(),
     logoUrl: uploadUrl.nullable().optional(),
     coverUrl: uploadUrl.nullable().optional(),
+    phone: z
+      .string()
+      .trim()
+      .max(30)
+      .regex(/^[\d\s+()-]*$/, "Telefon sadece rakam, boşluk ve + ( ) - içerebilir")
+      .nullable()
+      .optional(),
+    openingHours: z.string().trim().max(60).nullable().optional(),
     theme: z.enum(THEMES).optional(),
     currency: z.string().trim().toUpperCase().length(3),
     languages: z.array(langCode).min(1, "En az bir dil seçin"),
@@ -51,6 +59,7 @@ const translations = z.record(
 export const categorySchema = z.object({
   translations,
   isActive: z.boolean().optional(),
+  imageUrl: uploadUrl.nullable().optional(),
 });
 
 export const productSchema = z.object({

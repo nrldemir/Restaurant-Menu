@@ -15,6 +15,8 @@ export function serializeRestaurant(r: Restaurant) {
     description: r.description,
     logoUrl: r.logoUrl,
     coverUrl: r.coverUrl,
+    phone: r.phone,
+    openingHours: r.openingHours,
     theme: r.theme,
     currency: r.currency,
     languages: parseLanguages(r.languages),
@@ -28,6 +30,7 @@ export function serializeCategory(c: Category & { translations: CategoryTranslat
     id: c.id,
     sortOrder: c.sortOrder,
     isActive: c.isActive,
+    imageUrl: c.imageUrl,
     translations: toTranslationMap(c.translations),
   };
 }

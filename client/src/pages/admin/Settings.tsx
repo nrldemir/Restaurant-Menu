@@ -1,8 +1,7 @@
 import { useMemo, useState, type FormEvent } from "react";
-import { Check, Globe, ImageIcon, LoaderCircle, Palette, Store, TriangleAlert } from "lucide-react";
+import { Check, Clock, Globe, ImageIcon, LoaderCircle, Moon, Palette, Phone, Search, Store, TriangleAlert } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
 import { ImageInput } from "../../components/ImageInput";
-import { Ornament } from "../../components/Logo";
 import { useToast } from "../../components/Toast";
 import { Card, PageHeader } from "../../components/ui";
 import { api, errorMessage } from "../../lib/api";
@@ -11,18 +10,20 @@ import { sanitizeSlugInput } from "../../lib/slug";
 import { THEMES, themeVars } from "../../lib/themes";
 import type { Restaurant } from "../../lib/types";
 
-type Form = Pick<
-  Restaurant,
-  "name" | "slug" | "logoUrl" | "coverUrl" | "theme" | "currency" | "languages" | "defaultLanguage"
-> & { description: string };
+type Form = Pick<Restaurant, "name" | "slug" | "logoUrl" | "theme" | "currency" | "languages" | "defaultLanguage"> & {
+  description: string;
+  phone: string;
+  openingHours: string;
+};
 
 function toForm(r: Restaurant): Form {
   return {
     name: r.name,
     slug: r.slug,
     description: r.description ?? "",
+    phone: r.phone ?? "",
+    openingHours: r.openingHours ?? "",
     logoUrl: r.logoUrl,
-    coverUrl: r.coverUrl,
     theme: r.theme,
     currency: r.currency,
     languages: r.languages,
@@ -30,48 +31,93 @@ function toForm(r: Restaurant): Form {
   };
 }
 
-/** Ayarlar sayfasındaki canlı menü önizlemesi. */
+const PREVIEW_CATS = [
+  { name: "Kahvaltı", img: "/landing/serpme.jpg" },
+  { name: "Izgaralar", img: "/landing/adana.jpg" },
+];
+const PREVIEW_ITEMS = [
+  { name: "Adana Kebap", price: "₺620", img: "/landing/adana.jpg" },
+  { name: "İskender", price: "₺680", img: "/landing/iskender.jpg" },
+  { name: "Lahmacun", price: "₺160", img: "/landing/lahmacun.jpg" },
+  { name: "Künefe", price: "₺290", img: "/landing/kunefe.jpg" },
+];
+
+/** Ayarlar sayfasındaki canlı menü önizlemesi (müşteri menüsüyle aynı sınıflar). */
 function MenuPreview({ form }: { form: Form }) {
+  const langs = form.languages.slice(0, 3);
   return (
-    <div className="preview-phone menu-page" style={themeVars(form.theme)}>
-      <div className={`preview-hero menu-hero${form.coverUrl ? " has-cover" : ""}`}>
-        {form.coverUrl && <img className="menu-hero-img" src={form.coverUrl} alt="" />}
-        <div className="menu-hero-bar">
-          <span className="glass-pill">Masa 4</span>
-          <span className="glass-pill">
-            <Globe size={11} /> {form.defaultLanguage.toUpperCase()}
-          </span>
-        </div>
-        <div className="menu-hero-content">
-          <div className="menu-crest">
-            {form.logoUrl ? (
-              <img src={form.logoUrl} alt="" />
-            ) : (
-              <span className="display">{form.name.charAt(0) || "?"}</span>
+    <div className="preview-phone menu-page mode-light" style={themeVars(form.theme)}>
+      {(form.openingHours || form.phone) && (
+        <div className="m-topbar">
+          <div className="m-topbar-inner">
+            <span>{form.openingHours && <><Clock size={11} /> {form.openingHours}</>}</span>
+            {form.phone && (
+              <span>
+                <Phone size={11} /> {form.phone}
+              </span>
             )}
           </div>
-          <h1 className="menu-title display">{form.name || "Restoran adı"}</h1>
-          <Ornament className="menu-ornament" width={100} />
-          {form.description && <p className="menu-tagline display">{form.description}</p>}
+        </div>
+      )}
+      <div className="m-header">
+        <div className="m-brand">
+          {form.logoUrl && <img className="m-logo" src={form.logoUrl} alt="" />}
+          <div className="m-brand-text">
+            <strong>{form.name || "Restoran adı"}</strong>
+            {form.description && <small>{form.description}</small>}
+          </div>
+        </div>
+        <div className="m-tools">
+          {langs.length > 1 &&
+            langs.map((l) => (
+              <span key={l} className={`m-lang${l === form.defaultLanguage ? " active" : ""}`}>
+                {l.toUpperCase()}
+              </span>
+            ))}
+          {form.languages.length > 3 && (
+            <span className="m-tool">
+              <Globe size={15} />
+            </span>
+          )}
+          <span className="m-tool">
+            <Search size={15} />
+          </span>
+          <span className="m-tool">
+            <Moon size={15} />
+          </span>
         </div>
       </div>
-      <div className="preview-chips cat-nav">
-        <a className="active">Ana Yemekler</a>
-        <a>Tatlılar</a>
-        <a>İçecekler</a>
+      <div className="m-cats">
+        <div className="m-cats-track">
+          {PREVIEW_CATS.map((c) => (
+            <span key={c.name} className="m-cat">
+              <span className="m-cat-img">
+                <img src={c.img} alt="" />
+              </span>
+              <span className="m-cat-name">{c.name}</span>
+            </span>
+          ))}
+        </div>
       </div>
-      <div className="preview-items">
-        {["Adana Kebap", "Künefe"].map((n, i) => (
-          <div key={n} className="product-card">
-            <div className="product-body">
-              <h3>{n}</h3>
-              <p>{i === 0 ? "Közlenmiş domates ve biber ile" : "Antep fıstıklı, sıcak servis"}</p>
-              <div className="product-foot">
-                <span className="price">{i === 0 ? "₺480" : "₺240"}</span>
-              </div>
-            </div>
-          </div>
-        ))}
+      <div className="m-content">
+        <section className="m-section">
+          <header className="m-section-head">
+            <h2>Izgaralar</h2>
+          </header>
+          <ul className="m-grid">
+            {PREVIEW_ITEMS.map((p) => (
+              <li key={p.name}>
+                <span className="m-item">
+                  <span className="m-item-img">
+                    <img src={p.img} alt="" />
+                  </span>
+                  <span className="m-item-name">{p.name}</span>
+                  <span className="m-item-price">{p.price}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
       </div>
     </div>
   );
@@ -150,37 +196,57 @@ export function Settings() {
                 Link değişirse daha önce yazdırdığınız QR kodlar çalışmaz; yenilerini yazdırmanız gerekir.
               </div>
             )}
-            <label className="field" style={{ marginBottom: 0 }}>
+            <label className="field">
               <span className="field-label">Kısa açıklama</span>
               <textarea
                 value={form.description}
                 onChange={(e) => set("description", e.target.value)}
                 rows={2}
                 maxLength={500}
-                placeholder="Örn. 1985'ten beri odun ateşinde geleneksel lezzetler."
+                placeholder="Örn. Odun ateşinde geleneksel lezzetler"
               />
             </label>
+            <div className="form-row">
+              <label className="field" style={{ marginBottom: 0 }}>
+                <span className="field-label">Çalışma saatleri</span>
+                <div className="input-icon">
+                  <Clock size={17} />
+                  <input
+                    value={form.openingHours}
+                    onChange={(e) => set("openingHours", e.target.value)}
+                    maxLength={60}
+                    placeholder="09:00 – 24:00"
+                  />
+                </div>
+              </label>
+              <label className="field" style={{ marginBottom: 0 }}>
+                <span className="field-label">Telefon</span>
+                <div className="input-icon">
+                  <Phone size={17} />
+                  <input
+                    type="tel"
+                    inputMode="tel"
+                    value={form.phone}
+                    onChange={(e) => set("phone", e.target.value.replace(/[^\d\s+()-]/g, ""))}
+                    maxLength={30}
+                    placeholder="0212 123 45 67"
+                  />
+                </div>
+              </label>
+            </div>
+            <small className="field-hint" style={{ display: "block", marginTop: 8 }}>
+              Menünün en üstündeki şeritte görünür; telefona dokununca arama başlar.
+            </small>
           </Card>
 
-          <Card title="Görseller" description="Logo ve kapak, menünüze kimlik kazandırır." icon={ImageIcon}>
-            <div className="media-row">
-              <ImageInput
-                value={form.logoUrl}
-                onChange={(v) => set("logoUrl", v)}
-                label="Logo"
-                shape="square"
-                hint="Kare, en az 256×256 px"
-              />
-              <div className="media-cover">
-                <ImageInput
-                  value={form.coverUrl}
-                  onChange={(v) => set("coverUrl", v)}
-                  label="Kapak görseli"
-                  shape="wide"
-                  hint="Yatay, en az 1200×400 px. Yoksa tema rengi kullanılır."
-                />
-              </div>
-            </div>
+          <Card title="Logo" description="Menünün başlığında restoran adının yanında görünür." icon={ImageIcon}>
+            <ImageInput
+              value={form.logoUrl}
+              onChange={(v) => set("logoUrl", v)}
+              label="Logo"
+              shape="square"
+              hint="Şeffaf arka planlı PNG önerilir. Logo yoksa restoran adı yazıyla gösterilir."
+            />
           </Card>
 
           <Card title="Menü teması" description="Menünüzün renk paletini seçin." icon={Palette}>

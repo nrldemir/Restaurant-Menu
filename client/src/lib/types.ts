@@ -11,6 +11,8 @@ export interface Restaurant {
   description: string | null;
   logoUrl: string | null;
   coverUrl: string | null;
+  phone: string | null;
+  openingHours: string | null;
   theme: string;
   currency: string;
   languages: string[];
@@ -22,6 +24,7 @@ export interface Category {
   id: string;
   sortOrder: number;
   isActive: boolean;
+  imageUrl: string | null;
   translations: TranslationMap;
   productCount?: number;
 }
