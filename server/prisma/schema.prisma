@@ -22,6 +22,9 @@ model Restaurant {
   name            String
   description     String?
   logoUrl         String?
+  coverUrl        String?
+  /// Menü renk teması: nar, safran, zeytin, ege, murdum, antrasit
+  theme           String     @default("nar")
   currency        String     @default("TRY")
   /// Virgülle ayrılmış dil kodları, örn. "tr,en"
   languages       String     @default("tr")

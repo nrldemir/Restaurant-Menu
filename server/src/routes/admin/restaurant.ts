@@ -31,6 +31,8 @@ restaurantRouter.put("/", async (req, res) => {
       slug: data.slug,
       description: data.description || null,
       logoUrl: data.logoUrl === undefined ? current.logoUrl : data.logoUrl,
+      coverUrl: data.coverUrl === undefined ? current.coverUrl : data.coverUrl,
+      theme: data.theme ?? current.theme,
       currency: data.currency,
       languages: data.languages.join(","),
       defaultLanguage: data.defaultLanguage,
@@ -38,5 +40,6 @@ restaurantRouter.put("/", async (req, res) => {
   });
 
   if (current.logoUrl && current.logoUrl !== updated.logoUrl) await deleteUpload(current.logoUrl);
+  if (current.coverUrl && current.coverUrl !== updated.coverUrl) await deleteUpload(current.coverUrl);
   res.json(serializeRestaurant(updated));
 });

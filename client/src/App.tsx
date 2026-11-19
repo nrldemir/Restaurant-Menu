@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useAuth } from "./auth/AuthContext";
+import { LogoMark } from "./components/Logo";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
@@ -13,7 +14,12 @@ import { QrCodes } from "./pages/admin/QrCodes";
 function RequireAuth({ children }: { children: ReactNode }) {
   const { me, loading } = useAuth();
   const location = useLocation();
-  if (loading) return <div className="center muted">Yükleniyor…</div>;
+  if (loading)
+    return (
+      <div className="page-center">
+        <LogoMark size={48} className="pulse" />
+      </div>
+    );
   if (!me) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   return children;
 }
@@ -37,7 +43,19 @@ export function App() {
         <Route path="settings" element={<Settings />} />
         <Route path="qr" element={<QrCodes />} />
       </Route>
-      <Route path="*" element={<div className="center muted">Sayfa bulunamadı</div>} />
+      <Route
+        path="*"
+        element={
+          <div className="page-center not-found">
+            <LogoMark size={56} />
+            <h1 className="display">Sayfa bulunamadı</h1>
+            <p>Aradığınız sayfa taşınmış veya hiç var olmamış olabilir.</p>
+            <Link className="btn btn-primary" to="/">
+              Ana sayfaya dön
+            </Link>
+          </div>
+        }
+      />
     </Routes>
   );
 }

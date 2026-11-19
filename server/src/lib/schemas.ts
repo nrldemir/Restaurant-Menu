@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { SUPPORTED_LANGUAGES } from "./languages";
+import { SUPPORTED_LANGUAGES, THEMES } from "./languages";
 
 const langCode = z.enum(SUPPORTED_LANGUAGES);
 const slug = z
@@ -29,6 +29,8 @@ export const restaurantUpdateSchema = z
     slug,
     description: z.string().trim().max(500).nullable().optional(),
     logoUrl: uploadUrl.nullable().optional(),
+    coverUrl: uploadUrl.nullable().optional(),
+    theme: z.enum(THEMES).optional(),
     currency: z.string().trim().toUpperCase().length(3),
     languages: z.array(langCode).min(1, "En az bir dil seçin"),
     defaultLanguage: langCode,

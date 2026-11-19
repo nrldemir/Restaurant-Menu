@@ -10,6 +10,8 @@ export interface Restaurant {
   name: string;
   description: string | null;
   logoUrl: string | null;
+  coverUrl: string | null;
+  theme: string;
   currency: string;
   languages: string[];
   defaultLanguage: string;

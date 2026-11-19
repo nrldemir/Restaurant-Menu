@@ -36,7 +36,14 @@ export function pick(map: TranslationMap, lang: string, fallback: string) {
 
 export function formatPrice(price: number, currency: string, lang: string) {
   try {
-    return new Intl.NumberFormat(lang, { style: "currency", currency, maximumFractionDigits: 2 }).format(price);
+    const whole = Number.isInteger(price);
+    return new Intl.NumberFormat(lang, {
+      style: "currency",
+      currency,
+      currencyDisplay: "narrowSymbol",
+      minimumFractionDigits: whole ? 0 : 2,
+      maximumFractionDigits: 2,
+    }).format(price);
   } catch {
     return `${price} ${currency}`;
   }

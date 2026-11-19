@@ -14,6 +14,8 @@ export function serializeRestaurant(r: Restaurant) {
     name: r.name,
     description: r.description,
     logoUrl: r.logoUrl,
+    coverUrl: r.coverUrl,
+    theme: r.theme,
     currency: r.currency,
     languages: parseLanguages(r.languages),
     defaultLanguage: r.defaultLanguage,

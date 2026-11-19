@@ -1,29 +1,42 @@
 import { useEffect, type ReactNode } from "react";
+import { createPortal } from "react-dom";
+import { X } from "lucide-react";
 
 interface Props {
   title: string;
+  subtitle?: string;
   onClose(): void;
   children: ReactNode;
+  size?: "sm" | "md" | "lg";
 }
 
-export function Modal({ title, onClose, children }: Props) {
+export function Modal({ title, subtitle, onClose, children, size = "md" }: Props) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
   }, [onClose]);
 
-  return (
+  return createPortal(
     <div className="modal-backdrop" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal" role="dialog" aria-modal="true" aria-label={title}>
+      <div className={`modal modal-${size}`} role="dialog" aria-modal="true" aria-label={title}>
         <header className="modal-header">
-          <h2>{title}</h2>
+          <div>
+            <h2>{title}</h2>
+            {subtitle && <p>{subtitle}</p>}
+          </div>
           <button type="button" className="icon-btn" onClick={onClose} aria-label="Kapat">
-            ✕
+            <X size={18} />
           </button>
         </header>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

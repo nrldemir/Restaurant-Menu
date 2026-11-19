@@ -1,0 +1,255 @@
+.qr-page .card + .qr-layout {
+  margin-top: 20px;
+}
+
+.copy-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.copy-field {
+  flex: 1;
+  min-width: 220px;
+  position: relative;
+}
+.copy-field svg {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+}
+.copy-field input {
+  padding-left: 38px;
+  height: 40px;
+  background: var(--surface-2);
+  font-weight: 550;
+}
+
+.qr-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 960px) {
+  .qr-layout {
+    grid-template-columns: 1fr;
+  }
+  .qr-general .table-card {
+    max-width: 260px;
+    margin: 0 auto;
+  }
+}
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+.stepper button {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow-xs);
+  cursor: pointer;
+}
+.stepper button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.stepper input {
+  width: 52px;
+  height: 32px;
+  padding: 0;
+  text-align: center;
+  font-weight: 700;
+  border: 0;
+  background: transparent;
+  box-shadow: none !important;
+  -moz-appearance: textfield;
+}
+.stepper input::-webkit-inner-spin-button,
+.stepper input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+.stepper span {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 600;
+  padding-right: 8px;
+}
+
+.table-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+/* Masa kartı — her zaman açık renkli (yazdırma için) */
+.table-card {
+  --m-primary: var(--m-primary-light);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  color: #1d1814;
+  border: 1px solid #ebe3d9;
+  border-radius: 22px;
+  overflow: hidden;
+  break-inside: avoid;
+  page-break-inside: avoid;
+  box-shadow: 0 1px 2px rgb(29 24 20 / 0.05);
+}
+.table-card-top {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 14px 34px;
+  background: var(--m-hero);
+  color: #fff;
+  position: relative;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.table-card-top::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(rgb(255 255 255 / 0.14) 1px, transparent 1.5px) 0 0 / 14px 14px;
+}
+.table-card-top > * {
+  position: relative;
+}
+.table-card-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgb(255 255 255 / 0.2);
+  border: 2px solid rgb(255 255 255 / 0.5);
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  font-weight: 600;
+}
+.table-card-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.table-card-top strong {
+  font-size: 17px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+}
+.table-card-qr {
+  width: 76%;
+  margin-top: -22px;
+  padding: 8px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px -8px rgb(29 24 20 / 0.3);
+  position: relative;
+}
+.table-card-qr img {
+  width: 100%;
+  aspect-ratio: 1;
+}
+.table-card figcaption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 10px 16px;
+}
+.table-card-no {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--m-primary);
+}
+.table-card-no b {
+  font-weight: 700;
+}
+.table-card-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #857664;
+}
+.table-card-actions {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+  padding: 10px;
+  border-top: 1px solid #f0e9e1;
+  background: #fbf8f4;
+}
+.table-card-actions .btn {
+  flex: 1;
+  background: #fff;
+  color: #1d1814;
+  border-color: #ebe3d9;
+}
+
+/* ---------- Yazdırma ---------- */
+
+@media print {
+  @page {
+    margin: 12mm;
+  }
+  body {
+    background: #fff !important;
+  }
+  .sidebar,
+  .mobile-topbar,
+  .tabbar,
+  .toasts,
+  .page-header,
+  .no-print,
+  .card-header {
+    display: none !important;
+  }
+  .admin-main {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+  }
+  .card {
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    background: none !important;
+  }
+  .qr-layout {
+    display: block !important;
+  }
+  .print-tables .qr-general,
+  .print-general .qr-tables {
+    display: none !important;
+  }
+  .print-general .qr-general .table-card {
+    width: 90mm;
+    margin: 0 auto;
+  }
+  .table-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8mm !important;
+  }
+  .table-card {
+    box-shadow: none !important;
+  }
+}

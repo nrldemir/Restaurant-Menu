@@ -1,0 +1,126 @@
+/*
+ * Lokma renk skalası
+ * nar      — ana marka rengi (sıcak, iştah açıcı kırmızı-turuncu)
+ * safran   — vurgu
+ * taş      — sıcak nötr tonlar
+ */
+:root {
+  --nar-50: #fff5f0;
+  --nar-100: #ffe6da;
+  --nar-200: #ffc8b0;
+  --nar-300: #fda17d;
+  --nar-400: #f7713f;
+  --nar-500: #e8521f;
+  --nar-600: #cc3f15;
+  --nar-700: #a93114;
+  --nar-800: #872917;
+  --nar-900: #6e2416;
+
+  --safran-100: #fff1d1;
+  --safran-300: #ffd37a;
+  --safran-400: #f7b733;
+  --safran-500: #e39a12;
+
+  --tas-0: #ffffff;
+  --tas-50: #fbf8f4;
+  --tas-100: #f5f0ea;
+  --tas-200: #ebe3d9;
+  --tas-300: #d9cdbf;
+  --tas-400: #b3a493;
+  --tas-500: #857664;
+  --tas-600: #64574a;
+  --tas-700: #4a4037;
+  --tas-800: #2f2822;
+  --tas-900: #1d1814;
+  --tas-950: #13100d;
+
+  --zeytin-500: #3f8a57;
+  --zeytin-100: #e3f2e7;
+  --kiraz-500: #d63b3b;
+  --kiraz-100: #fde6e6;
+
+  /* Anlamsal değişkenler */
+  --bg: var(--tas-50);
+  --bg-elevated: var(--tas-0);
+  --surface: var(--tas-0);
+  --surface-2: var(--tas-100);
+  --surface-3: var(--tas-200);
+  --text: var(--tas-900);
+  --text-2: var(--tas-600);
+  --muted: var(--tas-500);
+  --border: var(--tas-200);
+  --border-strong: var(--tas-300);
+
+  --primary: var(--nar-600);
+  --primary-hover: var(--nar-700);
+  --primary-soft: var(--nar-50);
+  --primary-soft-2: var(--nar-100);
+  --on-primary: #fff;
+  --accent: var(--safran-400);
+
+  --success: var(--zeytin-500);
+  --success-soft: var(--zeytin-100);
+  --danger: var(--kiraz-500);
+  --danger-soft: var(--kiraz-100);
+  --warn: #a86a00;
+  --warn-soft: var(--safran-100);
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 999px;
+
+  --shadow-xs: 0 1px 2px rgb(29 24 20 / 0.06);
+  --shadow-sm: 0 1px 2px rgb(29 24 20 / 0.05), 0 2px 8px rgb(29 24 20 / 0.05);
+  --shadow-md: 0 2px 4px rgb(29 24 20 / 0.04), 0 8px 24px rgb(29 24 20 / 0.08);
+  --shadow-lg: 0 4px 8px rgb(29 24 20 / 0.04), 0 20px 48px rgb(29 24 20 / 0.14);
+  --shadow-primary: 0 6px 20px rgb(204 63 21 / 0.28);
+  --ring: 0 0 0 3px rgb(232 82 31 / 0.22);
+
+  --font-sans: "Plus Jakarta Sans Variable", "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Fraunces Variable", "Fraunces", Georgia, "Times New Roman", serif;
+
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: var(--tas-950);
+    --bg-elevated: #1a1612;
+    --surface: #1c1814;
+    --surface-2: #26201b;
+    --surface-3: #332b24;
+    --text: #f6f0e9;
+    --text-2: #cdbfb0;
+    --muted: #9d8f80;
+    --border: #2f2822;
+    --border-strong: #42382f;
+
+    --primary: #ff7a4d;
+    --primary-hover: #ff9670;
+    --primary-soft: rgb(255 122 77 / 0.12);
+    --primary-soft-2: rgb(255 122 77 / 0.2);
+    --on-primary: #1d0f08;
+
+    --success: #6cc98a;
+    --success-soft: rgb(108 201 138 / 0.14);
+    --danger: #ff6b6b;
+    --danger-soft: rgb(255 107 107 / 0.14);
+    --warn: #f2bc4b;
+    --warn-soft: rgb(242 188 75 / 0.14);
+
+    --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.4);
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3), 0 2px 8px rgb(0 0 0 / 0.25);
+    --shadow-md: 0 2px 4px rgb(0 0 0 / 0.3), 0 8px 24px rgb(0 0 0 / 0.35);
+    --shadow-lg: 0 4px 8px rgb(0 0 0 / 0.3), 0 20px 48px rgb(0 0 0 / 0.5);
+    --shadow-primary: 0 6px 20px rgb(255 122 77 / 0.25);
+    --ring: 0 0 0 3px rgb(255 122 77 / 0.3);
+
+    color-scheme: dark;
+  }
+}

@@ -1,4 +1,4 @@
-# Dijital Menü
+# Lokma · Dijital Menü
 
 Restoranlar için çok dilli, QR kodlu dijital menü platformu. Her restoran kendi hesabıyla menüsünü yönetir ve menüsü `/menu/<link-adı>` adresinde yayınlanır.
 
@@ -28,7 +28,17 @@ Ardından:
 - **Yönetim paneli:** kategori/ürün ekleme, düzenleme, silme, sıralama; kategori gizleme; ürünü "tükendi" işaretleme.
 - **Çoklu dil:** restoran 8 dile kadar seçebilir (TR, EN, DE, FR, ES, IT, RU, AR — Arapça sağdan sola). Çevirisi olmayan içerikte varsayılan dil gösterilir. Müşteri menüde dili değiştirebilir; tarayıcı dili otomatik algılanır.
 - **Görseller:** ürün fotoğrafı ve restoran logosu yükleme (JPG/PNG/WEBP/GIF, en fazla 5 MB) — `server/uploads/` klasörüne kaydedilir.
-- **QR kod:** genel menü QR'ı ve masaya özel QR'lar (PNG/SVG indirme, toplu yazdırma). Masa QR'ı okutulunca menüde masa numarası görünür.
+- **QR kod:** genel menü QR'ı ve masaya özel, restoranın temasıyla tasarlanmış yazdırılabilir masa kartları (PNG/SVG indirme). Masa QR'ı okutulunca menüde masa numarası görünür.
+- **Menü temaları:** 6 hazır renk paleti (Nar, Safran, Zeytin, Ege, Mürdüm, Antrasit), kapak görseli ve logo; ayarlar sayfasında canlı önizleme.
+- **Kullanım kolaylığı:** sürükle-bırak sıralama, görsel sürükle-bırak yükleme, bildirimler, açık/koyu mod, mobilde alt sekme çubuğu.
+
+## Tasarım sistemi
+
+Renkler, yazı tipleri ve gölgeler [client/src/styles/tokens.css](client/src/styles/tokens.css) içinde tanımlıdır:
+
+- **Nar** (`--nar-50 … --nar-900`) ana marka rengi, **Safran** vurgu, **Taş** sıcak nötr tonlar.
+- Başlıklar **Fraunces**, metinler **Plus Jakarta Sans** (paket olarak gömülü, harici istek yok).
+- Menü temaları [client/src/lib/themes.ts](client/src/lib/themes.ts) içinde; yeni tema eklerken `server/src/lib/languages.ts` içindeki `THEMES` listesine de ekleyin.
 
 ## Telefonla test
 
